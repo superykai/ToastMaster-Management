@@ -1,0 +1,63 @@
+<!--<div class="col-md-8">-->
+<legend>Add / Update Member Profile</legend>
+<form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
+
+  <div class="form-group" [ngClass]="{ 'has-error': invalidFirstName() }">
+    <label for="firstName" class="control-label">First Name</label>
+    <input formControlName="firstName" class="form-control" id="firstName" name="firstName" placeholder="" #f (change)="changeFirstName(f.value)">
+    <p *ngIf="invalidFirstName()" id="firstName_error" class="help-block">Invalid First Name.</p>
+  </div>
+
+  <div class="form-group" [ngClass]="{ 'has-error': invalidLastName() }">
+    <label for="lastName" class="control-label">Last Name</label>
+    <input formControlName="lastName" class="form-control" id="lastName" name="lastName" placeholder="" #l (change)="changeLastName(l.value)">
+    <p *ngIf="invalidLastName()" id="lastName_error" class="help-block">Invalid Last Name.</p>
+  </div>
+
+  <div class="form-group" [ngClass]="{ 'has-error': invalidEmail() }">
+    <label for="email" class="control-label">E-mail</label>
+    <input formControlName="email" class="form-control" id="email" name="email" placeholder="your@email.com" #e (change)="changeEmail(e.value)">
+    <p *ngIf="invalidEmail()" id="email_error" class="help-block">Invalid E-mail.</p>
+  </div>
+
+  <div class="form-group" [ngClass]="{ 'has-error': invalidGuardian() }">
+    <label class="control-label" for="guardian">Guardian</label>
+    <div>
+      <select formControlName="guardian" id="guardian" class="form-control" #g (change)="changeGuardian(g.value)">
+        <option [value]="-1">N/A</option>
+        <option *ngFor="let member of members; index as i" [value]="member.guid">{{member.lastName+ ', ' + member.firstName}}</option>
+      </select>
+      <p *ngIf="invalidGuardian()" id="guardian_error" class="help-block">Invalid Guardian Info.</p>
+    </div>
+  </div>
+
+  <div class="form-group" [ngClass]="{ 'has-error': invalidAge() }">
+    <label class="control-label" for="ageLevel">Age</label>
+    <div>
+      <select formControlName="ageLevel" id="ageLevel" class="form-control" #a (change)="changeAge(a.value)">
+        <option value = "2">Adult</option>
+        <option value = "1">Youth</option>
+        <option value = "0">Kid</option>
+      </select>
+      <p *ngIf="invalidAge()" id="age_error" class="help-block">Invalid Age.</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label" for="roles">Can be Assigned to</label>
+    <div>
+      <mat-selection-list formControlName="roles" id="roles" #UIRoles >
+        <mat-list-option *ngFor="let role of roles" [value]="role.guid" [selected]="role.selected"  (click)="onRoleChange(UIRoles)">
+          {{role.roleName}}
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+  </div>
+
+  <div class="form-group has-error"> <!-- submit Button -->
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+
+</form>
+<!--</div>-->
+

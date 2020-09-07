@@ -1,0 +1,17 @@
+<div class="dropzone"
+     dropzone
+     (hovered)="toggleHover($event)"
+     (dropped)="onDrop($event)"
+     [class.hovering]="isHovering">
+
+
+  <h3>RemindMe! Files Drop Zone</h3>
+  <p>Drag and Drop File(s)</p>
+</div>
+
+<h3>Uploads</h3>
+
+<div *ngFor="let file of files; index as i">
+  <app-upload-task id='upload-task-{{i}}' [file]="file"></app-upload-task>
+</div>
+

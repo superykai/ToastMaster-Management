@@ -1,0 +1,21 @@
+table {
+  width: 100%;
+}
+.mat-column-canBeRoles {
+  word-wrap: break-word !important;
+  white-space: pre !important;
+  flex: 0 0 28% !important;
+  width: 40% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+
+

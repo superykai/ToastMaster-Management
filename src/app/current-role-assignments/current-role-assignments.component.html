@@ -1,0 +1,154 @@
+<h3>Next three weeks [Role Assignments]</h3>
+<br/>
+<div class="row" style="width:100%;">
+  <div class="col-xs-4">
+    <mat-form-field>
+      <input matInput [min]="this.minDate" [matDatepicker]="picker" [(ngModel)]="currentMeetDate" (ngModelChange)="checkButtonEnabled()" placeholder="Next Meeting Date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div class="col-xs-4">
+    <mat-form-field>
+      <input matInput [min]="this.minNextDate" [matDatepicker]="picker1" [(ngModel)]="nextMeetDate" (ngModelChange)="checkButtonEnabled()" placeholder="Second Next Meeting Date">
+      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker #picker1></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div class="col-xs-4">
+    <mat-form-field>
+      <input matInput [min]="this.minNextNextDate" [matDatepicker]="picker2" [(ngModel)]="nextNextMeetDate" (ngModelChange)="checkButtonEnabled()" placeholder="Third Next Meeting Date">
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+  </div>
+</div>
+  <div>
+    <button type="submit" class="btn btn-primary" [disabled]="!submitBtnEnabled? 'disabled': null" (click)="reGenerateBtnClicked()">Re-Generate</button>
+  </div>
+<hr>
+<br/>
+  <div *ngIf="displayCurrent && displayCurrent.length>0">
+    <legend>Meeting For -- {{displayCurrent[0].date}}   &nbsp; <button type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
+    <table mat-table [dataSource]="dataSourceCurrent" matSort class="mat-elevation-z8">
+
+      <ng-container matColumnDef="roleName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+        <td mat-cell *matCellDef="let element"><strong>{{element.roleName}}</strong></td>
+      </ng-container>
+
+      <ng-container matColumnDef="assignedTo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Assigned To </th>
+        <td mat-cell *matCellDef="let element"><strong>{{element.memberName}} </strong> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="timeLimit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Time Limit </th>
+        <td  mat-cell *matCellDef="let element">
+<!--          <input *ngIf="element.roleName.toLowerCase().indexOf('speaker')>=0"  [value]="element.timeLimit" [(ngModel)]="element.timeLimit" (blur)="tableCurrent.update(element.key, element)">-->
+          <a *ngIf="element.roleName.toLowerCase().indexOf('speaker')>=0"  style="cursor: pointer;" (click)="openDialog('Update-Current','from-assignment','timeLimit',element)">{{element.timeLimit}}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email / Guardian Email </th>
+        <td mat-cell *matCellDef="let element">{{element.email}}</td>
+      </ng-container>
+
+      <!-- Memo Column -->
+      <ng-container matColumnDef="memo">
+        <th mat-header-cell *matHeaderCellDef> Memo </th>
+        <td mat-cell *matCellDef="let element" class="action-link">
+          {{element.memo}}
+          <a style="cursor: pointer;" (click)="openDialog('Update-Current','from-assignment','memo',element)"><img src="../../assets/edit.png" width="15px"></a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+<br/>
+<hr>
+<div *ngIf="displayNextMeet && displayNextMeet.length>0">
+  <legend>Meeting For -- {{displayNextMeet[0].date}}   &nbsp; <button type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
+  <table mat-table [dataSource]="dataSourceNextMeeting" matSort class="mat-elevation-z8">
+
+    <ng-container matColumnDef="roleName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+      <td mat-cell *matCellDef="let element"><strong>{{element.roleName}}</strong></td>
+    </ng-container>
+
+    <ng-container matColumnDef="assignedTo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Assigned To </th>
+      <td mat-cell *matCellDef="let element"><strong>{{element.memberName}} </strong> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="timeLimit">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Time Limit </th>
+      <td  mat-cell *matCellDef="let element">
+<!--        <input *ngIf="element.roleName.toLowerCase().indexOf('speaker')>=0"  [value]="element.timeLimit" [(ngModel)]="element.timeLimit" (blur)="tableNext.update(element.key, element)">-->
+        <a *ngIf="element.roleName.toLowerCase().indexOf('speaker')>=0"  style="cursor: pointer;" (click)="openDialog('Update-Next','from-assignment','timeLimit',element)">{{element.timeLimit}}</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Email / Guardian Email </th>
+      <td mat-cell *matCellDef="let element">{{element.email}}</td>
+    </ng-container>
+
+    <!-- Memo Column -->
+    <ng-container matColumnDef="memo">
+      <th mat-header-cell *matHeaderCellDef> Memo </th>
+      <td mat-cell *matCellDef="let element" class="action-link">
+        {{element.memo}}
+        <a style="cursor: pointer;" (click)="openDialog('Update-Next','from-assignment','memo',element)"><img src="../../assets/edit.png" width="15px"></a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+<br/>
+<hr>
+<div *ngIf="displayNextNextMeet && displayNextNextMeet.length>0">
+  <legend>Meeting For -- {{displayNextNextMeet[0].date}}   &nbsp; <button type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
+  <table mat-table [dataSource]="dataSourceNextNextMeeting" matSort class="mat-elevation-z8">
+
+    <ng-container matColumnDef="roleName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+      <td mat-cell *matCellDef="let element"><strong>{{element.roleName}}</strong></td>
+    </ng-container>
+
+    <ng-container matColumnDef="assignedTo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Assigned To </th>
+      <td mat-cell *matCellDef="let element"><strong>{{element.memberName}} </strong> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="timeLimit">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Time Limit </th>
+      <td  mat-cell *matCellDef="let element">
+        <a *ngIf="element.roleName.toLowerCase().indexOf('speaker')>=0"  style="cursor: pointer;" (click)="openDialog('Update-SecondNext','from-assignment','timeLimit',element)">{{element.timeLimit}}</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Email / Guardian Email </th>
+      <td mat-cell *matCellDef="let element">{{element.email}}</td>
+    </ng-container>
+
+    <!-- Memo Column -->
+    <ng-container matColumnDef="memo">
+      <th mat-header-cell *matHeaderCellDef> Memo </th>
+      <td mat-cell *matCellDef="let element" class="action-link">
+        {{element.memo}}
+        <a style="cursor: pointer;" (click)="openDialog('Update-SecondNext','from-assignment','memo',element)"><img src="../../assets/edit.png" width="15px"></a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+

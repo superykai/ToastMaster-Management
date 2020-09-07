@@ -1,0 +1,43 @@
+<h3 mat-dialog-title>Action :: <strong>{{action.substring(0, action.indexOf('-'))}}</strong></h3>
+<div mat-dialog-content style="text-align: center;">
+  <div *ngIf="action != 'Delete'; else elseTemplate">
+    <div *ngIf="from =='from-assignment'" style="width: 100%">
+      <mat-form-field>
+        <textarea *ngIf="fieldName==='memo'" placeholder="{{action.substring(0, action.indexOf('-'))}} {{fieldName}}" matInput [(ngModel)]="local_data.memo" rows="5"></textarea>
+        <input *ngIf="fieldName==='timeLimit'" placeholder="{{action.substring(0, action.indexOf('-'))}} {{fieldName}}" matInput [(ngModel)]="local_data.timeLimit">
+      </mat-form-field>
+    </div>
+    <div *ngIf="from == 'from-role'" style="width: 100%">
+      <mat-form-field>
+        <input required placeholder="Role Name" matInput [(ngModel)]="local_data.roleName">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-select [(value)]="local_data.isSpeakerRole">
+          <mat-option [value]="false">No</mat-option>
+          <mat-option [value]="true">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input type="number" required min="1" placeholder="Weight" matInput [(ngModel)]="local_data.weight">
+      </mat-form-field>
+      <mat-form-field>
+        <input type="number" required min="1" placeholder="Sort Index" matInput [(ngModel)]="local_data.sortIndex">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-select [(value)]="local_data.activated">
+          <mat-option [value]="false">No</mat-option>
+          <mat-option [value]="true">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <ng-template #elseTemplate>
+    Are you sure to delete <b *ngIf="from =='from-member'">{{local_data.firstName}}  {{local_data.lastName}}</b>?
+  </ng-template>
+</div>
+<br/>
+<div mat-dialog-actions>
+  <button class="btn btn-primary" (click)="doAction()">{{action.substring(0, action.indexOf('-'))}}</button> &nbsp; &nbsp;
+  <button class="btn btn-primary" (click)="closeDialog()" mat-flat-button color="warn">Cancel</button>
+</div>

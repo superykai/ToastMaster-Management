@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "dist/ToastmasterManagement",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
