@@ -1,5 +1,6 @@
 export class ClubMeetingModel
 {
+  key: string;
   assignedTo:number;
   date: string;
   email: string;

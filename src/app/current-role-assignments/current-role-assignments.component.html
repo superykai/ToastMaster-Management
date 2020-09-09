@@ -59,8 +59,8 @@
       <ng-container matColumnDef="memo">
         <th mat-header-cell *matHeaderCellDef> Memo </th>
         <td mat-cell *matCellDef="let element" class="action-link">
-          {{element.memo}}
           <a style="cursor: pointer;" (click)="openDialog('Update-Current','from-assignment','memo',element)"><img src="../../assets/edit.png" width="15px"></a>
+          {{element.memo}}
         </td>
       </ng-container>
 
@@ -101,8 +101,8 @@
     <ng-container matColumnDef="memo">
       <th mat-header-cell *matHeaderCellDef> Memo </th>
       <td mat-cell *matCellDef="let element" class="action-link">
-        {{element.memo}}
         <a style="cursor: pointer;" (click)="openDialog('Update-Next','from-assignment','memo',element)"><img src="../../assets/edit.png" width="15px"></a>
+        {{element.memo}}
       </td>
     </ng-container>
 
@@ -142,8 +142,8 @@
     <ng-container matColumnDef="memo">
       <th mat-header-cell *matHeaderCellDef> Memo </th>
       <td mat-cell *matCellDef="let element" class="action-link">
-        {{element.memo}}
         <a style="cursor: pointer;" (click)="openDialog('Update-SecondNext','from-assignment','memo',element)"><img src="../../assets/edit.png" width="15px"></a>
+        {{element.memo}}
       </td>
     </ng-container>
 

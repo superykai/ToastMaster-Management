@@ -1,10 +1,32 @@
-<h3 mat-dialog-title>Action :: <strong>{{action.substring(0, action.indexOf('-'))}}</strong></h3>
+<h3 mat-dialog-title>Action :: <strong>{{action.indexOf('-')>0? action.substring(0, action.indexOf('-')) : action}}</strong></h3>
 <div mat-dialog-content style="text-align: center;">
   <div *ngIf="action != 'Delete'; else elseTemplate">
     <div *ngIf="from =='from-assignment'" style="width: 100%">
       <mat-form-field>
         <textarea *ngIf="fieldName==='memo'" placeholder="{{action.substring(0, action.indexOf('-'))}} {{fieldName}}" matInput [(ngModel)]="local_data.memo" rows="5"></textarea>
         <input *ngIf="fieldName==='timeLimit'" placeholder="{{action.substring(0, action.indexOf('-'))}} {{fieldName}}" matInput [(ngModel)]="local_data.timeLimit">
+      </mat-form-field>
+    </div>
+    <div *ngIf="from.indexOf('from-history-')>=0" style="width: 100%">
+      <mat-label>Meeting for -- {{local_data.date}}</mat-label>
+      <mat-form-field appearance="outline" style="width: 90%">
+        <mat-label>Role</mat-label>
+        <mat-select  [(value)]="local_data.roleId">
+          <mat-option *ngFor="let role of roles" [value]="role.guid">{{role.roleName}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width: 90%;">
+        <mat-label>Member Name</mat-label>
+        <mat-select  [(value)]="local_data.assignedTo">
+          <mat-option *ngFor="let member of members" [value]="member.guid">{{member.lastName + ', ' + member.firstName}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="from == 'from-new-history'" style="width: 100%">
+      <mat-form-field>
+        <input matInput [max]="maxDate" [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" [(ngModel)]="local_data.date"  placeholder="History Meeting Date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
     </div>
     <div *ngIf="from == 'from-role'" style="width: 100%">
@@ -38,6 +60,6 @@
 </div>
 <br/>
 <div mat-dialog-actions>
-  <button class="btn btn-primary" (click)="doAction()">{{action.substring(0, action.indexOf('-'))}}</button> &nbsp; &nbsp;
+  <button class="btn btn-primary" (click)="doAction()">{{action.indexOf('-')>0? action.substring(0, action.indexOf('-')) : action}}</button> &nbsp; &nbsp;
   <button class="btn btn-primary" (click)="closeDialog()" mat-flat-button color="warn">Cancel</button>
 </div>

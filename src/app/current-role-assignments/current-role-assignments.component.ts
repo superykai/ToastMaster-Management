@@ -64,9 +64,9 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     this.tableMembers = this.db.list<AngularFireList<any>>(environment.memberTable.name, ref => ref.orderByChild('lastName'));
     this.tableRoles = this.db.list<AngularFireList<any>>(environment.roleTable.name, ref=>ref.orderByChild('roleName'));
     this.tableHistory = this.db.list<AngularFireList<any>>(environment.assignmentHistoryTable.name, ref=>ref.orderByChild('date'));
-    this.tableCurrent = this.db.list<AngularFireList<any>>(environment.currentAssignmentTable.name, ref=>ref.orderByChild('date'));
-    this.tableNext = this.db.list<AngularFireList<any>>(environment.nextAssignmentTable.name, ref=>ref.orderByChild('date'));
-    this.tableNextNext = this.db.list<AngularFireList<any>>(environment.nextNextAssignmentTable.name, ref=>ref.orderByChild('date'));
+    this.tableCurrent = this.db.list<AngularFireList<any>>(environment.currentAssignmentTable.name, ref=>ref.orderByChild('sortIndex'));
+    this.tableNext = this.db.list<AngularFireList<any>>(environment.nextAssignmentTable.name, ref=>ref.orderByChild('sortIndex'));
+    this.tableNextNext = this.db.list<AngularFireList<any>>(environment.nextNextAssignmentTable.name, ref=>ref.orderByChild('sortIndex'));
     this.minDate = new Date(Date.now() + ( 3600 * 1000 * 24));
     this.minNextDate = new Date();
     this.minNextNextDate = new Date();
@@ -89,6 +89,10 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     if (this.current && this.current.length >0){
       if (new Date(this.current[0].date) < new Date()){
         // today is new date, in table Current information should move to Assignment History table
+        for (let i = 0; i< this.current.length; i++){
+          if (this.current[i].key)
+            delete this.current[i].key;
+        }
         this.tableHistory.push(this.current);
         this.current = new Array<ClubMeetingModel>();
         this.tableCurrent.remove();
@@ -203,14 +207,13 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
       numOfHistoriesNeed = totalHistories;
 
     if (numOfHistoriesNeed > 0) {
-      for (let idx = numOfHistoriesNeed - 1; idx > 0; idx--) {
-        for (let i = 0; i < this.listOfHistories.length; i++) {
-          for (const [key, val] of Object.entries(this.listOfHistories[i] as Array<ClubMeetingModel>)) {
-            this.history.push(val);
-          }
+      for (let i = totalHistories-1; i >= totalHistories-numOfHistoriesNeed; i--) {
+        for (const [key, val] of Object.entries(this.listOfHistories[i] as Array<ClubMeetingModel>)) {
+          this.history.push(val);
         }
       }
     }
+
     //calculate the weights for each members based on history roles
     this.calculateWeights();
 
@@ -277,6 +280,7 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
         }
       }
     }
+    try {theOneWorkingOn.sort((a, b) => a.sortIndex - b.sortIndex);} catch(ex){}
     theOneWorkingOn.forEach(r => {
       if (r.key) {
         delete r.key;
@@ -300,7 +304,6 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
       'sortIndex': this.roles[RoleIndex].sortIndex
     };
     ArrayObject.push(jsonData);
-    try {ArrayObject.sort((a, b) => a.sortIndex - b.sortIndex);} catch(ex){}
   }
 
   openDialog(action, from, fieldName, obj) {
@@ -341,6 +344,8 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
       this.memberSubscription.unsubscribe();
     if (this.roleSubscription)
       this.roleSubscription.unsubscribe();
+    if (this.historySubscription)
+      this.historySubscription.unsubscribe();
   }
 
 }

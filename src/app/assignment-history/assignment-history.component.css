@@ -1,0 +1,80 @@
+table {
+  width: 100%;
+}
+.mat-column-timeLimit {
+  word-wrap: break-word !important;
+  white-space: pre !important;
+  flex: 0 0 28% !important;
+  width: 5% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+.mat-column-memo {
+  word-wrap: normal;
+  flex: 0 0 28% !important;
+  width: 35% !important;
+  overflow-wrap: normal;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+input {
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: hidden;
+  border-bottom-style: groove;
+  background-color: #fff;
+}
+
+.no-outline:focus {
+  outline: none;
+}
+
+::ng-deep .mat-select-content{
+  width:20px;
+  background-color: red;
+  font-size: 10px;
+}
+
+
+
+.container-box {
+  /*width:100%;*/
+  /*height: 100%;*/
+
+}
+
+#overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: block; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other
+  elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+
+#spinner{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 50px;
+  color: white;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+}

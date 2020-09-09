@@ -24,6 +24,8 @@ import { MemberDetailComponent } from './member-detail/member-detail.component';
 import {MatListModule} from "@angular/material/list";
 import { RoleComponent } from './role/role.component';
 import {MatSelectModule} from "@angular/material/select";
+import { AssignmentHistoryComponent } from './assignment-history/assignment-history.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import {MatSelectModule} from "@angular/material/select";
     MembersComponent,
     CurrentRoleAssignmentsComponent,
     MemberDetailComponent,
-    RoleComponent
+    RoleComponent,
+    AssignmentHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +54,8 @@ import {MatSelectModule} from "@angular/material/select";
     AngularFireDatabaseModule,
     AngularFirestoreModule,
     MatListModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressSpinnerModule
   ],
   entryComponents: [DialogBoxComponent],
   exports: [],

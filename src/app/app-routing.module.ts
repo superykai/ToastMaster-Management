@@ -5,6 +5,7 @@ import {MembersComponent} from "./members/members.component";
 import {ManageAllFilesComponent} from "./manage-all-files/manage-all-files.component";
 import {MemberDetailComponent} from "./member-detail/member-detail.component";
 import {RoleComponent} from "./role/role.component";
+import {AssignmentHistoryComponent} from "./assignment-history/assignment-history.component";
 
 
 const routes: Routes = [
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'role',
     component: RoleComponent
+  },
+  {
+    path: 'history',
+    component: AssignmentHistoryComponent
   },
   {
     path: 'files/all',
