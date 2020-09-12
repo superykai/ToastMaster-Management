@@ -10,14 +10,14 @@
       <a class="navbar-brand" routerLink="/">Hope TMC !</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav" routerLinkActive="active">
+          <ul *ngIf="loginLabel=='Logout'" class="nav navbar-nav" routerLinkActive="active">
             <li class="nav-item"><a class="nav-link" routerLink="members">Members</a></li>
             <li class="nav-item"><a class="nav-link" routerLink="role">Roles</a></li>
             <li class="nav-item"><a class="nav-link" routerLink="history">Assignment History</a></li>
             <li class="nav-item"><a class="nav-link" routerLink="files/all">Manage Files</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a routerLink="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            <li><a routerLink="login"><span class="glyphicon glyphicon-log-in"></span> {{loginLabel}}</a></li>
           </ul>
     </div>
   </div>

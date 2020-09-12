@@ -59,6 +59,8 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
   dataSourceNextMeeting: any;
   dataSourceNextNextMeeting: any;
 
+  isLogined: boolean = false;
+
 
   constructor(private db: AngularFireDatabase,  public dialog: MatDialog) {
     this.tableMembers = this.db.list<AngularFireList<any>>(environment.memberTable.name, ref => ref.orderByChild('lastName'));
@@ -75,13 +77,15 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
   }
 
   ngOnInit(): void {
+    if (localStorage.getItem('user'))
+      this.isLogined = true;
+
     this.submitBtnEnabled = false;
     this.initializeMe();
   }
 
   ngAfterViewInit(): void {
     // setTimeout(() =>this.moveUpMeetings(),1000);
-
 
   }
 

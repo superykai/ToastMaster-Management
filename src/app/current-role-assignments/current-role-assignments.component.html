@@ -1,6 +1,6 @@
 <h3>Next three weeks [Role Assignments]</h3>
 <br/>
-<div class="row" style="width:100%;">
+<div class="row" style="width:100%;" *ngIf="isLogined">
   <div class="col-xs-4">
     <mat-form-field>
       <input matInput [min]="this.minDate" [matDatepicker]="picker" [(ngModel)]="currentMeetDate" (ngModelChange)="checkButtonEnabled()" placeholder="Next Meeting Date">
@@ -23,7 +23,7 @@
     </mat-form-field>
   </div>
 </div>
-  <div>
+  <div *ngIf="isLogined">
     <button type="submit" class="btn btn-primary" [disabled]="!submitBtnEnabled? 'disabled': null" (click)="reGenerateBtnClicked()">Re-Generate</button>
     &nbsp;&nbsp;&nbsp;
     <button type="submit" class="btn btn-danger" [disabled]="!displayCurrent? 'disabled': null" (click)="reSetBtnClicked()">ReSet</button>
@@ -31,28 +31,33 @@
 <hr>
 <br/>
   <div *ngIf="displayCurrent && displayCurrent.length>0">
-    <legend>Meeting For -- {{displayCurrent[0].date}}   &nbsp; <button type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
+    <legend>Meeting For -- {{displayCurrent[0].date}}   &nbsp; <button *ngIf="isLogined" type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
     <table mat-table [dataSource]="dataSourceCurrent" matSort class="mat-elevation-z8">
 
       <ng-container matColumnDef="roleName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
         <td mat-cell  *matCellDef="let element">
-          <mat-form-field appearance="outline" style="width: 90%">
+          <mat-form-field *ngIf="isLogined" appearance="outline" style="width: 90%">
             <mat-select  [(value)]="element.roleId" (valueChange)="updateCurrentTable(element);">
               <mat-option *ngFor="let role of roles" [value]="role.guid">{{role.roleName}}</mat-option>
             </mat-select>
           </mat-form-field>
+          <div *ngIf="!isLogined"><strong>{{element.roleName}}</strong></div>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="assignedTo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Assigned To </th>
         <td mat-cell *matCellDef="let element">
-          <mat-form-field appearance="outline" style="width: 90%;">
+          <mat-form-field *ngIf="isLogined" appearance="outline" style="width: 90%;">
             <mat-select  [(value)]="element.assignedTo" (valueChange)="updateCurrentTable(element);">
               <mat-option *ngFor="let member of members" [value]="member.guid">{{member.lastName + ', ' + member.firstName}}</mat-option>
             </mat-select>
           </mat-form-field>
+          <div *ngIf="!isLogined">
+            <strong *ngIf="element.roleName.indexOf('Speaker')>=0">{{element.memberName}}</strong>
+            <span *ngIf="element.roleName.indexOf('Speaker')<0">{{element.memberName}}</span>
+          </div>
         </td>
       </ng-container>
 
@@ -82,7 +87,7 @@
         <th mat-header-cell *matHeaderCellDef> Action </th>
         <td mat-cell *matCellDef="let element" class="action-link">
           <div style="display: none">{{element.key}}</div>
-          <a  style="cursor: pointer;" (click)="openDialog('Delete','from-assignment-current','',element)"><img src="../../assets/delete.png" width="20px"></a>
+          <a *ngIf="isLogined" style="cursor: pointer;" (click)="openDialog('Delete','from-assignment-current','',element)"><img src="../../assets/delete.png" width="20px"></a>
         </td>
       </ng-container>
 
@@ -93,28 +98,33 @@
 <br/>
 <hr>
 <div *ngIf="displayNextMeet && displayNextMeet.length>0">
-  <legend>Meeting For -- {{displayNextMeet[0].date}}   &nbsp; <button type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
+  <legend>Meeting For -- {{displayNextMeet[0].date}}   &nbsp; <button *ngIf="isLogined" type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
   <table mat-table [dataSource]="dataSourceNextMeeting" matSort class="mat-elevation-z8">
 
     <ng-container matColumnDef="roleName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
       <td mat-cell  *matCellDef="let element">
-        <mat-form-field appearance="outline" style="width: 90%">
+        <mat-form-field *ngIf="isLogined" appearance="outline" style="width: 90%">
           <mat-select  [(value)]="element.roleId" (valueChange)="updateNextTable(element);">
             <mat-option *ngFor="let role of roles" [value]="role.guid">{{role.roleName}}</mat-option>
           </mat-select>
         </mat-form-field>
+        <div *ngIf="!isLogined"><strong>{{element.roleName}}</strong></div>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="assignedTo">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Assigned To </th>
       <td mat-cell *matCellDef="let element">
-        <mat-form-field appearance="outline" style="width: 90%;">
+        <mat-form-field *ngIf="isLogined" appearance="outline" style="width: 90%;">
           <mat-select  [(value)]="element.assignedTo" (valueChange)="updateNextTable(element);">
             <mat-option *ngFor="let member of members" [value]="member.guid">{{member.lastName + ', ' + member.firstName}}</mat-option>
           </mat-select>
         </mat-form-field>
+        <div *ngIf="!isLogined">
+          <strong *ngIf="element.roleName.indexOf('Speaker')>=0">{{element.memberName}}</strong>
+          <span *ngIf="element.roleName.indexOf('Speaker')<0">{{element.memberName}}</span>
+        </div>
       </td>
     </ng-container>
 
@@ -140,11 +150,11 @@
       </td>
     </ng-container>
     <!-- Action Column -->
-    <ng-container matColumnDef="action">
+    <ng-container  matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> Action </th>
       <td mat-cell *matCellDef="let element" class="action-link">
         <div style="display: none">{{element.key}}</div>
-        <a  style="cursor: pointer;" (click)="openDialog('Delete','from-assignment-next','',element)"><img src="../../assets/delete.png" width="20px"></a>
+        <a *ngIf="isLogined" style="cursor: pointer;" (click)="openDialog('Delete','from-assignment-next','',element)"><img src="../../assets/delete.png" width="20px"></a>
       </td>
     </ng-container>
 
@@ -155,28 +165,33 @@
 <br/>
 <hr>
 <div *ngIf="displayNextNextMeet && displayNextNextMeet.length>0">
-  <legend>Meeting For -- {{displayNextNextMeet[0].date}}   &nbsp; <button type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
+  <legend>Meeting For -- {{displayNextNextMeet[0].date}}   &nbsp; <button *ngIf="isLogined" type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
   <table mat-table [dataSource]="dataSourceNextNextMeeting" matSort class="mat-elevation-z8">
 
     <ng-container matColumnDef="roleName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
       <td mat-cell  *matCellDef="let element">
-        <mat-form-field appearance="outline" style="width: 90%">
+        <mat-form-field *ngIf="isLogined" appearance="outline" style="width: 90%">
           <mat-select  [(value)]="element.roleId" (valueChange)="updateNextNextTable(element);">
             <mat-option *ngFor="let role of roles" [value]="role.guid">{{role.roleName}}</mat-option>
           </mat-select>
         </mat-form-field>
+        <div *ngIf="!isLogined"><strong>{{element.roleName}}</strong></div>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="assignedTo">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Assigned To </th>
       <td mat-cell *matCellDef="let element">
-        <mat-form-field appearance="outline" style="width: 90%;">
+        <mat-form-field *ngIf="isLogined" appearance="outline" style="width: 90%;">
           <mat-select  [(value)]="element.assignedTo" (valueChange)="updateNextNextTable(element);">
             <mat-option *ngFor="let member of members" [value]="member.guid">{{member.lastName + ', ' + member.firstName}}</mat-option>
           </mat-select>
         </mat-form-field>
+        <div *ngIf="!isLogined">
+          <strong *ngIf="element.roleName.indexOf('Speaker')>=0">{{element.memberName}}</strong>
+          <span *ngIf="element.roleName.indexOf('Speaker')<0">{{element.memberName}}</span>
+        </div>
       </td>
     </ng-container>
 
@@ -206,12 +221,14 @@
       <th mat-header-cell *matHeaderCellDef> Action </th>
       <td mat-cell *matCellDef="let element" class="action-link">
         <div style="display: none">{{element.key}}</div>
-        <a  style="cursor: pointer;" (click)="openDialog('Delete','from-assignment-nextnext','',element)"><img src="../../assets/delete.png" width="20px"></a>
+        <a *ngIf="isLogined" style="cursor: pointer;" (click)="openDialog('Delete','from-assignment-nextnext','',element)"><img src="../../assets/delete.png" width="20px"></a>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+  <br/>
 </div>
+<br/>
 

@@ -1,13 +1,25 @@
-<div>
-  <h3>Administrator Login</h3>
-  <mat-form-field>
-    <mat-label>Login Email</mat-label>
-    <input matInput placeholder="Ex. Your@email.com">
-  </mat-form-field>
-  <br/>
-  <mat-form-field>
-    <mat-label>Password</mat-label>
-    <input matInput placeholder="">
-  </mat-form-field>
-  <button type="submit" class="btn btn-primary" (click)="login()">Login</button>
+<div style="width:300px">
+  <h4>Administrator Login</h4>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input type="text" formControlName="email" id="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+        <div *ngIf="f.email.errors.required">E-mail is required</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" formControlName="password" id="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+        <div *ngIf="f.password.errors.required">Password is required</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary">
+        Login
+      </button>
+
+    </div>
+  </form>
 </div>
