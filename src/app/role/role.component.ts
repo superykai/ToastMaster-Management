@@ -25,7 +25,7 @@ export class RoleComponent implements OnInit, OnDestroy {
   roleSubscription: Subscription;
   memberSubscription: Subscription;
 
-  displayedColumns: string[] = ['roleName', 'isSpeakerRole','weight','sortIndex','activated'];
+  displayedColumns: string[] = ['roleName', 'isSpeakerRole', 'isEvaluatorRole','weight','sortIndex','activated'];
 
   dataSource: any;
 
@@ -78,6 +78,7 @@ export class RoleComponent implements OnInit, OnDestroy {
           'guid': guid,
           'activated': result.data.activated,
           'isSpeakerRole': result.data.isSpeakerRole,
+          'isEvaluatorRole': result.data.isEvaluatorRole,
           'roleName': result.data.roleName,
           'sortIndex': Number(result.data.sortIndex),
           'weight': Number(result.data.weight)};

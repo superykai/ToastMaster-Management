@@ -26,6 +26,7 @@ import { RoleComponent } from './role/role.component';
 import {MatSelectModule} from "@angular/material/select";
 import { AssignmentHistoryComponent } from './assignment-history/assignment-history.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     CurrentRoleAssignmentsComponent,
     MemberDetailComponent,
     RoleComponent,
-    AssignmentHistoryComponent
+    AssignmentHistoryComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

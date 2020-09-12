@@ -5,6 +5,7 @@ export class RoleModel
   roleName: string;
   activated: boolean;
   isSpeakerRole: boolean;
+  isEvaluatorRole: boolean;
   sortIndex: number;
   weight: number;
   selected: boolean;

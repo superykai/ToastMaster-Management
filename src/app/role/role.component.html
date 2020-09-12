@@ -25,6 +25,18 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="isEvaluatorRole">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Evaluator Role? </th>
+    <td mat-cell *matCellDef="let element">
+      <mat-form-field appearance="fill">
+        <mat-select [(value)]="element.isEvaluatorRole" (blur)="tableRoles.update(element.key, element)">
+          <mat-option [value]="false">No</mat-option>
+          <mat-option [value]="true">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="weight">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Weight </th>
     <td  mat-cell *matCellDef="let element">
