@@ -22,7 +22,9 @@ export class UploadTaskComponent implements OnInit {
   snapshot: Observable<any>;
   downloadURL: string;
 
-  constructor(private storage: AngularFireStorage, private db: AngularFirestore, private activedRoute: ActivatedRoute,  public datePipe: DatePipe) { }
+  constructor(private storage: AngularFireStorage, private db: AngularFirestore,
+              private activedRoute: ActivatedRoute,
+              public datePipe: DatePipe) { }
 
   ngOnInit() {
     this.startUpload();
@@ -45,18 +47,21 @@ export class UploadTaskComponent implements OnInit {
     this.snapshot   = this.task.snapshotChanges().pipe(
       tap(console.log),
       // The file's download URL
-      finalize( async() =>  {
+      finalize( async () =>  {
         this.downloadURL = await ref.getDownloadURL().toPromise();
 
-        const created_date = this.datePipe.transform(`${Date.now()}`, 'MM/dd/yyyy');
+        const createdDate = this.datePipe.transform(`${Date.now()}`, 'MM/dd/yyyy');
 
         let sid = this.activedRoute.snapshot.paramMap.get('sid');
         if (sid == null) {
           sid = this.activedRoute.snapshot.queryParamMap.get('sid');
-          if (sid == null && this.activedRoute.url != null)
+          if (sid == null && this.activedRoute.url != null) {
             sid = this.activedRoute.url.queryParamMap.get('sid');
+          }
         }
-        this.db.collection(environment.fileStore.name).add( {'sid':Number(sid), 'file_name': this.file.name, downloadURL: this.downloadURL, path, 'created_date': created_date });
+        this.db.collection(environment.fileStore.name)
+          .add({sid: Number(sid), file_name: this.file.name, downloadURL: this.downloadURL, path, created_date: createdDate
+          });
       }),
     );
   }

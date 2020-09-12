@@ -1,11 +1,11 @@
 import {Component, Inject, Optional} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {ClubMeetingModel} from '../models/ClubMeetingModel';
-import {AngularFireDatabase, AngularFireList} from "@angular/fire/database";
-import {RoleModel} from "../models/RoleModel";
-import {environment} from "../../environments/environment";
-import {MemberModel} from "../models/MemberModel";
-import util from "../utility/util";
+import {AngularFireDatabase, AngularFireList} from '@angular/fire/database';
+import {RoleModel} from '../models/RoleModel';
+import {environment} from '../../environments/environment';
+import {MemberModel} from '../models/MemberModel';
+import Util from '../utility/util';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class DialogBoxComponent {
   fieldName: string;
   action: string;
   from: string;
-  local_data: any;
+  localData: any;
 
   tableRoles: AngularFireList<any>;
   roles: Array<RoleModel>;
@@ -30,16 +30,16 @@ export class DialogBoxComponent {
   dateFilter: any;
 
   constructor(private db: AngularFireDatabase,
-    public dialogRef: MatDialogRef<DialogBoxComponent>,
+              public dialogRef: MatDialogRef<DialogBoxComponent>,
     // @Optional() is used to prevent error if no data is passed
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: ClubMeetingModel) {
+              @Optional() @Inject(MAT_DIALOG_DATA) public data: ClubMeetingModel) {
     console.log(data);
-    this.local_data = {...data};
-    this.from = this.local_data.from;
-    this.fieldName = this.local_data.fieldName;
-    this.action = this.local_data.action;
+    this.localData = {...data};
+    this.from = this.localData.from;
+    this.fieldName = this.localData.fieldName;
+    this.action = this.localData.action;
 
-    this.tableRoles = this.db.list<AngularFireList<any>>(environment.roleTable.name, ref=>ref.orderByChild('sortIndex'));
+    this.tableRoles = this.db.list<AngularFireList<any>>(environment.roleTable.name, ref => ref.orderByChild('sortIndex'));
     this.tableMembers = this.db.list<AngularFireList<any>>(environment.memberTable.name, ref => ref.orderByChild('lastName'));
     this.tableRoles.valueChanges().subscribe(listRoles => {
       this.roles = listRoles as Array<RoleModel>;
@@ -48,22 +48,23 @@ export class DialogBoxComponent {
       });
     });
 
-    if (this.from == 'from-new-history') {
+    if (this.from === 'from-new-history') {
      try{
-       let dateStringArray = "";
+       let dateStringArray = '';
        (Object.values(data)).forEach(d => {
          if (!isNaN(new Date(d).valueOf())){
-          dateStringArray += util.GetFormattedDate(new Date(d))+',';
+          dateStringArray += Util.GetFormattedDate(new Date(d)) + ',';
          }
        });
-       if (dateStringArray.length>0)
-         this.dateFilter = (date: Date | null) => {return dateStringArray.indexOf(util.GetFormattedDate(date))< 0;}
-     } catch(ex){}
+       if (dateStringArray.length > 0) {
+         this.dateFilter = (date: Date | null) => dateStringArray.indexOf(Util.GetFormattedDate(date)) < 0;
+       }
+     } catch (ex){}
     }
   }
 
   doAction(){
-    this.dialogRef.close({event: this.action, from: this.from, data: this.local_data});
+    this.dialogRef.close({event: this.action, from: this.from, data: this.localData});
   }
 
   closeDialog(){

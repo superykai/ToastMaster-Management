@@ -21,11 +21,11 @@ import { ManageAllFilesComponent } from './manage-all-files/manage-all-files.com
 import { MembersComponent } from './members/members.component';
 import { CurrentRoleAssignmentsComponent } from './current-role-assignments/current-role-assignments.component';
 import { MemberDetailComponent } from './member-detail/member-detail.component';
-import {MatListModule} from "@angular/material/list";
+import {MatListModule} from '@angular/material/list';
 import { RoleComponent } from './role/role.component';
-import {MatSelectModule} from "@angular/material/select";
+import {MatSelectModule} from '@angular/material/select';
 import { AssignmentHistoryComponent } from './assignment-history/assignment-history.component';
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { LoginComponent } from './login/login.component';
 
 @NgModule({

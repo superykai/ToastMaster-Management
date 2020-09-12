@@ -1,11 +1,11 @@
 export class FileModel
 {
   id: string;
-  subject_name: string;
+  subjectName: string;
   downloadURL: string;
   path: string;
-  file_name: string;
-  file_extension:string;
+  fileName: string;
+  fileExtension: string;
   sid: number;
 
   constructor(obj: any = null)

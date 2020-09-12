@@ -5,37 +5,37 @@
 export const environment = {
   production: false,
   firebase : {
-    apiKey: "AIzaSyA0nZ8tVjk0x8VBIzmV5RnZn_sS0Z_WGC8",
-    authDomain: "toastmaster-management.firebaseapp.com",
-    databaseURL: "https://toastmaster-management.firebaseio.com",
-    projectId: "toastmaster-management",
-    storageBucket: "toastmaster-management.appspot.com",
-    messagingSenderId: "24697891398",
-    appId: "1:24697891398:web:993fb4e2e6b4711590b847",
-    measurementId: "G-F8TNJRSVB9"
+    apiKey: 'AIzaSyA0nZ8tVjk0x8VBIzmV5RnZn_sS0Z_WGC8',
+    authDomain: 'toastmaster-management.firebaseapp.com',
+    databaseURL: 'https://toastmaster-management.firebaseio.com',
+    projectId: 'toastmaster-management',
+    storageBucket: 'toastmaster-management.appspot.com',
+    messagingSenderId: '24697891398',
+    appId: '1:24697891398:web:993fb4e2e6b4711590b847',
+    measurementId: 'G-F8TNJRSVB9'
   },
   memberTable: {
-    name: "/members"
+    name: '/members'
   },
   roleTable: {
-    name: "/Roles"
+    name: '/Roles'
   },
   assignmentHistoryTable: {
-    name: "/assignmentHistory"
+    name: '/assignmentHistory'
   },
   currentAssignmentTable: {
-    name: "/currentAssignment"
+    name: '/currentAssignment'
   },
   nextAssignmentTable: {
-    name: "/nextAssignment"
+    name: '/nextAssignment'
   },
   nextNextAssignmentTable: {
-    name: "/nextNextAssignment"
+    name: '/nextNextAssignment'
   },
-  fileStore:{
-    name: "RemindMe-Files"
+  fileStore: {
+    name: 'RemindMe-Files'
   },
-  validationEnum:{
+  validationEnum: {
     firstNameMax: 100,
     lastNameMax: 100
   }

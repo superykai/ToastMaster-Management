@@ -7,8 +7,8 @@ import {AfterContentChecked, Component, OnInit} from '@angular/core';
 })
 export class AppComponent implements OnInit, AfterContentChecked {
   title = 'Toast Master Management';
-  loginLabel: string ="Login";
-  isLogined: boolean = false;
+  loginLabel = 'Login';
+  isLogined = false;
 
   ngOnInit(): void {
 
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, AfterContentChecked {
     }
     else {
       this.loginLabel = 'Login';
-      this.isLogined=true;
+      this.isLogined = true;
     }
   }
 }

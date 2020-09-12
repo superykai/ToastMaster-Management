@@ -6,10 +6,10 @@ import {delay, map} from 'rxjs/operators';
 import {MatTableDataSource} from '@angular/material/table';
 import {Subscription} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {MemberModel} from "../models/MemberModel";
-import {RoleModel} from "../models/RoleModel";
-import {DialogBoxComponent} from "../dialog-box/dialog-box.component";
-import {MatDialog} from "@angular/material/dialog";
+import {MemberModel} from '../models/MemberModel';
+import {RoleModel} from '../models/RoleModel';
+import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-members',
@@ -28,12 +28,12 @@ export class MembersComponent implements OnInit, OnDestroy {
   memberSubscription: Subscription;
   roleSubscription: Subscription;
 
-  constructor(private db: AngularFireDatabase,private activatedRoute: ActivatedRoute, private route: Router,public dialog: MatDialog) {
+  constructor(private db: AngularFireDatabase, private activatedRoute: ActivatedRoute, private route: Router, public dialog: MatDialog) {
     this.tableMembers = this.db.list<AngularFireList<any>>(environment.memberTable.name, ref => ref.orderByChild('lastName'));
-    this.tableRoles = this.db.list<AngularFireList<any>>(environment.roleTable.name, ref=>ref.orderByChild('sortIndex'));
+    this.tableRoles = this.db.list<AngularFireList<any>>(environment.roleTable.name, ref => ref.orderByChild('sortIndex'));
   }
 
-  displayedColumns: string[] = ['firstName', 'lastName','email','ageLevel','canBeRoles', 'guardian','action'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'ageLevel', 'canBeRoles', 'guardian', 'action'];
 
   dataSource: any;
 
@@ -48,30 +48,31 @@ export class MembersComponent implements OnInit, OnDestroy {
         map(actions =>
           actions.map(a => ({ key: a.key, ...a.payload.val() }))
         )
-      ).subscribe(items =>{
+      ).subscribe(items => {
         this.roles = items as RoleModel[];
 
-      this.memberSubscription = this.tableMembers
+        this.memberSubscription = this.tableMembers
         .snapshotChanges().pipe(
           // delay(50),
           map(actions =>
             actions.map(a => ({ key: a.key, ...a.payload.val() }))
           )
-        ).subscribe(items => {
-          this.members = items as MemberModel[];
-          this.members.forEach(member =>{
-            let mem = this.members.filter(m => m.guid === member.primaryGuardian)[0];
-            if (mem!=null)
+        ).subscribe(list => {
+          this.members = list as MemberModel[];
+          this.members.forEach(member => {
+            const mem = this.members.filter(m => m.guid === member.primaryGuardian)[0];
+            if (mem != null) {
               member.guardian = mem.lastName + ', ' + mem.firstName ;
+            }
 
             if (member.canAssignRoles.trim().length > 0){
-              let canBeRoles = member.canAssignRoles.trim().split(',');
+              const canBeRoles = member.canAssignRoles.trim().split(',');
               member.canBeRoles = [];
               canBeRoles.forEach(cbr => {
                 const oneRole =  this.roles.filter(r => r.guid === Number(cbr))[0];
-                member.canBeRoles.push({'roleName': oneRole.roleName, 'sortIndex': oneRole.sortIndex});
+                member.canBeRoles.push({roleName: oneRole.roleName, sortIndex: oneRole.sortIndex});
               });
-              member.canBeRoles.sort((a,b) => a.sortIndex - b.sortIndex);
+              member.canBeRoles.sort((a, b) => a.sortIndex - b.sortIndex);
             }
           });
           this.dataSource = new MatTableDataSource(this.members);
@@ -101,19 +102,21 @@ export class MembersComponent implements OnInit, OnDestroy {
   }
 
   updateRowData(row){
-    const path = '/members/'+ row.guid;
+    const path = '/members/' + row.guid;
     this.route.navigateByUrl(path);
   }
 
-  deleteRowData(row_obj){
-    this.tableMembers.remove(row_obj.key);
+  deleteRowData(rowObj){
+    this.tableMembers.remove(rowObj.key);
   }
 
   ngOnDestroy(): void {
-    if (this.memberSubscription)
+    if (this.memberSubscription) {
       this.memberSubscription.unsubscribe();
-    if (this.roleSubscription)
+    }
+    if (this.roleSubscription) {
       this.roleSubscription.unsubscribe();
+    }
   }
 
 }

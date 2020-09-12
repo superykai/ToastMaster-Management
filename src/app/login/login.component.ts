@@ -22,8 +22,9 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    if (localStorage.getItem('user'))
+    if (localStorage.getItem('user')) {
       this.logout();
+    }
   }
 
   ngOnInit(): void {
@@ -46,14 +47,14 @@ export class LoginComponent implements OnInit {
 
 
     // Sign in existing user
-    this.afAuth.signInWithEmailAndPassword(this.f.email.value, this.f.password.value).then(u=> {
-      let user = {'email': u.user.email,'name': u.user.displayName};
+    this.afAuth.signInWithEmailAndPassword(this.f.email.value, this.f.password.value).then(u => {
+      const user = {email: u.user.email, name: u.user.displayName};
       localStorage.setItem('user', JSON.stringify(user));
       this.router.navigate(['/']);
     })
-      .catch(function(err) {
+      .catch((err) => {
         // Handle errors
-        alert(err.code + " : " + err.message);
+        alert(err.code + ' : ' + err.message);
       });
 
   }

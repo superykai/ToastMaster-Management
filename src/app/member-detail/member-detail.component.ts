@@ -4,9 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireDatabase, AngularFireList} from '@angular/fire/database';
 import {environment} from '../../environments/environment';
 import {Subscription} from 'rxjs';
-import {MemberModel} from "../models/MemberModel";
-import {RoleModel} from "../models/RoleModel";
-import {map} from "rxjs/operators";
+import {MemberModel} from '../models/MemberModel';
+import {RoleModel} from '../models/RoleModel';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-member-detail',
@@ -19,8 +19,8 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   memberForm: FormGroup;
 
   guid: number;
-  _guid: string;
-  _member = new MemberModel();
+  strGuid: string;
+  member = new MemberModel();
 
   members: Array<MemberModel>;
   tableMember: AngularFireList<any>;
@@ -31,7 +31,8 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   memberSubscription: Subscription;
   roleSubscription: Subscription;
 
-  constructor(private db: AngularFireDatabase, private formBuilder: FormBuilder, private router: Router, private activedRoute: ActivatedRoute) {
+  constructor(private db: AngularFireDatabase, private formBuilder: FormBuilder, private router: Router,
+              private activedRoute: ActivatedRoute) {
     this.tableMember = this.db.list(environment.memberTable.name);
     this.tableRole = this.db.list(environment.roleTable.name);
   }
@@ -63,65 +64,67 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
 
 
   onRoleChange(event){
-    let selectedVals: string[] = [];
-    (event.selectedOptions.selected).forEach(s => {selectedVals.push(s._value)});
-    this._member.canAssignRoles = selectedVals.toString();
+    const selectedVals: string[] = [];
+    (event.selectedOptions.selected).forEach(s => {selectedVals.push(s._value); });
+    this.member.canAssignRoles = selectedVals.toString();
     // console.log(this._member.canAssignRoles);
   }
 
   changeGuardian(value){
-    this._member.primaryGuardian = Number(value);
+    this.member.primaryGuardian = Number(value);
   }
 
   changeFirstName(value){
-    this._member.firstName = value;
+    this.member.firstName = value;
   }
 
   changeLastName(value){
-    this._member.lastName = value;
+    this.member.lastName = value;
   }
 
   changeEmail(value){
-    this._member.email = value;
+    this.member.email = value;
   }
 
   changeAge(value){
-    this._member.ageLevel = Number(value);
+    this.member.ageLevel = Number(value);
   }
 
   ngOnInit() {
-    this._guid = this.activedRoute.snapshot.paramMap.get("guid");
+    this.strGuid = this.activedRoute.snapshot.paramMap.get('guid');
 
     this.roleSubscription = this.tableRole.valueChanges().subscribe(roleList => {
       this.roles = roleList as Array<RoleModel>;
-      this.roles.sort((a,b) => a.sortIndex - b.sortIndex);
+      this.roles.sort((a, b) => a.sortIndex - b.sortIndex);
 
-     this.memberSubscription = this.tableMember.snapshotChanges().pipe(
+      this.memberSubscription = this.tableMember.snapshotChanges().pipe(
         map(actions =>
           actions.map(a => ({key: a.key, ...a.payload.val()}))
         )
       ).subscribe(list => {
         this.members = list as Array<MemberModel>;
-        if (this._guid != null && !isNaN(Number(this._guid))) {
-          this.guid = Number(this._guid);
-          this._member = this.members.filter(a => a.guid === this.guid)[0];
+        if (this.strGuid != null && !isNaN(Number(this.strGuid))) {
+          this.guid = Number(this.strGuid);
+          this.member = this.members.filter(a => a.guid === this.guid)[0];
           this.roles.forEach(r => {
-            if (this._member.canAssignRoles.indexOf(r.guid.toString()) >= 0)
+            if (this.member.canAssignRoles.indexOf(r.guid.toString()) >= 0) {
               r.selected = true;
-            else
+            }
+            else {
               r.selected = false;
+            }
           });
           this.memberForm.setValue({
-            firstName: this._member.firstName,
-            lastName: this._member.lastName,
-            email: this._member.email,
-            guardian: this._member.primaryGuardian,
-            ageLevel: Number(this._member.ageLevel),
+            firstName: this.member.firstName,
+            lastName: this.member.lastName,
+            email: this.member.email,
+            guardian: this.member.primaryGuardian,
+            ageLevel: Number(this.member.ageLevel),
             roles: this.roles
           });
         }
         else{
-          this._guid = null;
+          this.strGuid = null;
         }
       });
     });
@@ -147,30 +150,30 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     }
     else
     {
-      if (this._guid==null) {
+      if (this.strGuid == null) {
         // new entry, new member
         this.guid = new Date().valueOf();
         // const data: MemberModel = Object.assign(this.memberForm.value);
         this.tableMember.push({
-          'guid': Number(this.guid),
-          'firstName': this._member.firstName,
-          'lastName': this._member.lastName,
-          'ageLevel': this._member.ageLevel,
-          'canAssignRoles': this._member.canAssignRoles,
-          'primaryGuardian': this._member.primaryGuardian,
-          'email': this._member.email? this._member.email:''
+          guid: Number(this.guid),
+          firstName: this.member.firstName,
+          lastName: this.member.lastName,
+          ageLevel: this.member.ageLevel,
+          canAssignRoles: this.member.canAssignRoles,
+          primaryGuardian: this.member.primaryGuardian,
+          email: this.member.email ? this.member.email : ''
         });
       }
       else{
-        //existing member
-        this.tableMember.update(this._member.key, {
-          'guid': Number(this.guid),
-          'firstName': this._member.firstName,
-          'lastName': this._member.lastName,
-          'ageLevel': this._member.ageLevel,
-          'canAssignRoles': this._member.canAssignRoles,
-          'primaryGuardian': this._member.primaryGuardian,
-          'email': this._member.email
+        // existing member
+        this.tableMember.update(this.member.key, {
+          guid: Number(this.guid),
+          firstName: this.member.firstName,
+          lastName: this.member.lastName,
+          ageLevel: this.member.ageLevel,
+          canAssignRoles: this.member.canAssignRoles,
+          primaryGuardian: this.member.primaryGuardian,
+          email: this.member.email
         });
       }
 
@@ -188,10 +191,12 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.memberSubscription)
+    if (this.memberSubscription) {
       this.memberSubscription.unsubscribe();
-    if (this.roleSubscription)
+    }
+    if (this.roleSubscription) {
       this.roleSubscription.unsubscribe();
+    }
   }
 }
 

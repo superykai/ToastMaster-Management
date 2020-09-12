@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {CurrentRoleAssignmentsComponent} from "./current-role-assignments/current-role-assignments.component";
-import {MembersComponent} from "./members/members.component";
-import {ManageAllFilesComponent} from "./manage-all-files/manage-all-files.component";
-import {MemberDetailComponent} from "./member-detail/member-detail.component";
-import {RoleComponent} from "./role/role.component";
-import {AssignmentHistoryComponent} from "./assignment-history/assignment-history.component";
-import {LoginComponent} from "./login/login.component";
+import {CurrentRoleAssignmentsComponent} from './current-role-assignments/current-role-assignments.component';
+import {MembersComponent} from './members/members.component';
+import {ManageAllFilesComponent} from './manage-all-files/manage-all-files.component';
+import {MemberDetailComponent} from './member-detail/member-detail.component';
+import {RoleComponent} from './role/role.component';
+import {AssignmentHistoryComponent} from './assignment-history/assignment-history.component';
+import {LoginComponent} from './login/login.component';
 
 
 const routes: Routes = [

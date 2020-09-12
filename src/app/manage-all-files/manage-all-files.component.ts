@@ -4,7 +4,7 @@ import {ActivatedRoute, Router } from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 
 import {MatTableDataSource} from '@angular/material/table';
-import {ClubMeetingModel} from "../models/ClubMeetingModel";
+import {ClubMeetingModel} from '../models/ClubMeetingModel';
 import { AngularFireDatabase} from '@angular/fire/database';
 import {environment} from '../../environments/environment';
 import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
@@ -13,7 +13,7 @@ import {Observable, Subscription} from 'rxjs';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
 import {FileModel} from '../models/FileModel';
 import {map} from 'rxjs/operators';
-import util from '../utility/util';
+import Util from '../utility/util';
 
 @Component({
   selector: 'app-manage-all-files',
@@ -33,13 +33,13 @@ export class ManageAllFilesComponent implements OnInit, OnDestroy {
   fileCollection: AngularFirestoreCollection<any>;
 
   constructor(private db: AngularFireDatabase, private activatedRoute: ActivatedRoute, private router: Router,
-              public dialog: MatDialog,private dbStore: AngularFirestore, private storage: AngularFireStorage) {
+              public dialog: MatDialog, private dbStore: AngularFirestore, private storage: AngularFireStorage) {
     this.sid = activatedRoute.snapshot.queryParamMap.get('sid');
 
     this.fileCollection = this.dbStore.collection<AngularFirestoreCollection<any>>(environment.fileStore.name);
   }
 
-  displayedColumns: string[] = ['subject_name','file_name', 'created_date', 'action'];
+  displayedColumns: string[] = ['subject_name', 'file_name', 'created_date', 'action'];
 
   dataSource: any;
 
@@ -50,12 +50,12 @@ export class ManageAllFilesComponent implements OnInit, OnDestroy {
   openDialog(action, from, obj) {
     obj.action = action;
     obj.from = from;
-    let width = '280px';
-    let height = '200px';
+    const width = '280px';
+    const height = '200px';
 
     const dialogRef = this.dialog.open(DialogBoxComponent, {
-      width: width,
-      height: height,
+      width,
+      height,
       data: obj
     });
 
@@ -78,14 +78,14 @@ export class ManageAllFilesComponent implements OnInit, OnDestroy {
     //   item.file_extension = util.getFileExtension(item.file_name);
     // });
 
-    if (value!=-1){
+    if (value !== -1){
       this.dataSource = new MatTableDataSource(this.files.filter(file => file.sid === Number(value)));
 
       this.sid = this.activatedRoute.snapshot.queryParamMap.get('sid');
-      if ( this.sid==null || this.sid == ""){
+      if ( this.sid == null || this.sid === ''){
         const urlTree = this.router.createUrlTree([], {
           queryParams: { sid: value },
-          queryParamsHandling: "merge",
+          queryParamsHandling: 'merge',
           preserveFragment: true });
         this.activatedRoute.url = urlTree;
         this.sid = value;
@@ -100,10 +100,10 @@ export class ManageAllFilesComponent implements OnInit, OnDestroy {
   }
 
 
-  deleteRowData(row_obj){
-    this.fileCollection.doc(row_obj.id).delete();
-    this.storage.storage.refFromURL(row_obj.downloadURL).delete();
-    //const folderPath = `RemindMe-Storage`;
+  deleteRowData(rowObj){
+    this.fileCollection.doc(rowObj.id).delete();
+    this.storage.storage.refFromURL(rowObj.downloadURL).delete();
+    // const folderPath = `RemindMe-Storage`;
 
     // this.storage.storage.ref(folderPath).listAll().then(data => {
     //   data.items.forEach(item => {
@@ -121,7 +121,7 @@ export class ManageAllFilesComponent implements OnInit, OnDestroy {
           const data = a.payload.doc.data() as FileModel;
           data.id = a.payload.doc.id;
           return data;
-        })
+        });
       })
     );
     // this.subjectSubscription = this.db.list<SubjectModel>(environment.subjectTable.name).valueChanges().subscribe(subjects => {
@@ -140,10 +140,12 @@ export class ManageAllFilesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subjectSubscription)
+    if (this.subjectSubscription) {
       this.subjectSubscription.unsubscribe();
-    if (this.fileSubscription)
+    }
+    if (this.fileSubscription) {
       this.fileSubscription.unsubscribe();
+    }
   }
 }
 

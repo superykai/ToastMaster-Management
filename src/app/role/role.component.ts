@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatSort} from "@angular/material/sort";
-import {AngularFireDatabase, AngularFireList} from "@angular/fire/database";
-import {RoleModel} from "../models/RoleModel";
-import {environment} from "../../environments/environment";
-import {Subscription} from "rxjs";
-import {map} from "rxjs/operators";
-import {MatTableDataSource} from "@angular/material/table";
-import {DialogBoxComponent} from "../dialog-box/dialog-box.component";
-import {MatDialog} from "@angular/material/dialog";
-import {MemberModel} from "../models/MemberModel";
+import {MatSort} from '@angular/material/sort';
+import {AngularFireDatabase, AngularFireList} from '@angular/fire/database';
+import {RoleModel} from '../models/RoleModel';
+import {environment} from '../../environments/environment';
+import {Subscription} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {MatTableDataSource} from '@angular/material/table';
+import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
+import {MatDialog} from '@angular/material/dialog';
+import {MemberModel} from '../models/MemberModel';
 
 @Component({
   selector: 'app-role',
@@ -25,13 +25,13 @@ export class RoleComponent implements OnInit, OnDestroy {
   roleSubscription: Subscription;
   memberSubscription: Subscription;
 
-  displayedColumns: string[] = ['roleName', 'isSpeakerRole', 'isEvaluatorRole','weight','sortIndex','activated'];
+  displayedColumns: string[] = ['roleName', 'isSpeakerRole', 'isEvaluatorRole', 'weight', 'sortIndex', 'activated'];
 
   dataSource: any;
 
-  constructor(private db: AngularFireDatabase,public dialog: MatDialog) {
+  constructor(private db: AngularFireDatabase, public dialog: MatDialog) {
     this.tableMembers = this.db.list<AngularFireList<any>>(environment.memberTable.name, ref => ref.orderByChild('lastName'));
-    this.tableRoles = this.db.list<AngularFireList<any>>(environment.roleTable.name, ref=>ref.orderByChild('sortIndex'));
+    this.tableRoles = this.db.list<AngularFireList<any>>(environment.roleTable.name, ref => ref.orderByChild('sortIndex'));
   }
 
   applyFilter(event: Event) {
@@ -45,7 +45,7 @@ export class RoleComponent implements OnInit, OnDestroy {
         map(actions =>
           actions.map(a => ({ key: a.key, ...a.payload.val() }))
         )
-      ).subscribe(items =>{
+      ).subscribe(items => {
         this.roles = items as RoleModel[];
         this.dataSource = new MatTableDataSource(this.roles);
         this.dataSource.sort = this.sort;
@@ -56,8 +56,8 @@ export class RoleComponent implements OnInit, OnDestroy {
             map(actions =>
               actions.map(a => ({ key: a.key, ...a.payload.val() }))
             )
-          ).subscribe(items => {
-            this.members = items as MemberModel[];
+          ).subscribe(list => {
+            this.members = list as MemberModel[];
           });
       });
   }
@@ -75,15 +75,15 @@ export class RoleComponent implements OnInit, OnDestroy {
       if (result.event === 'Add'){
         const guid = Number(new Date().valueOf());
         const data = {
-          'guid': guid,
-          'activated': result.data.activated,
-          'isSpeakerRole': result.data.isSpeakerRole,
-          'isEvaluatorRole': result.data.isEvaluatorRole,
-          'roleName': result.data.roleName,
-          'sortIndex': Number(result.data.sortIndex),
-          'weight': Number(result.data.weight)};
+          guid,
+          activated: result.data.activated,
+          isSpeakerRole: result.data.isSpeakerRole,
+          isEvaluatorRole: result.data.isEvaluatorRole,
+          roleName: result.data.roleName,
+          sortIndex: Number(result.data.sortIndex),
+          weight: Number(result.data.weight)};
         this.tableRoles.push(data);
-        //by default, every members have this role available right away.
+        // by default, every members have this role available right away.
         this.members.forEach(m => {
           m.canAssignRoles += ',' + guid.toString();
           this.tableMembers.update(m.key, m);
@@ -93,9 +93,11 @@ export class RoleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.roleSubscription)
+    if (this.roleSubscription) {
       this.roleSubscription.unsubscribe();
-    if (this.memberSubscription)
+    }
+    if (this.memberSubscription) {
       this.memberSubscription.unsubscribe();
+    }
   }
 }

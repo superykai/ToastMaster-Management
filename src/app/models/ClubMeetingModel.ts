@@ -1,11 +1,11 @@
 export class ClubMeetingModel
 {
   key: string;
-  assignedTo:number;
+  assignedTo: number;
   date: string;
   email: string;
-  memberName:string;
-  memo:string;
+  memberName: string;
+  memo: string;
   roleId: number;
   roleName: string;
   sortIndex: number;

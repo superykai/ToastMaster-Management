@@ -16,7 +16,7 @@
   <ng-container matColumnDef="isSpeakerRole">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Speaker Role? </th>
     <td mat-cell *matCellDef="let element">
-      <mat-form-field appearance="fill">
+      <mat-form-field style="width:100px;margin-right: 10px" appearance="outline">
         <mat-select [(value)]="element.isSpeakerRole" (blur)="tableRoles.update(element.key, element)">
           <mat-option [value]="false">No</mat-option>
           <mat-option [value]="true">Yes</mat-option>
@@ -28,7 +28,7 @@
   <ng-container matColumnDef="isEvaluatorRole">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Evaluator Role? </th>
     <td mat-cell *matCellDef="let element">
-      <mat-form-field appearance="fill">
+      <mat-form-field style="width:100px;margin-right: 10px" appearance="outline">
         <mat-select [(value)]="element.isEvaluatorRole" (blur)="tableRoles.update(element.key, element)">
           <mat-option [value]="false">No</mat-option>
           <mat-option [value]="true">Yes</mat-option>
@@ -54,7 +54,7 @@
   <ng-container matColumnDef="activated">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Activated? </th>
     <td mat-cell *matCellDef="let element">
-      <mat-form-field appearance="fill">
+      <mat-form-field style="width:100px;" appearance="outline">
         <mat-select [(value)]="element.activated" (blur)="tableRoles.update(element.key, element)">
           <mat-option [value]="false">No</mat-option>
           <mat-option [value]="true">Yes</mat-option>

@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --optimization=true",
+    "start": "ng serve",
+    "startme": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --optimization=true",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -24,7 +25,7 @@
     "@angular/router": "~9.1.9",
     "bootstrap": "^3.4.1",
     "express-generator-api": "^6.0.0",
-    "firebase": "^7.15.1",
+    "firebase": "^7.20.0",
     "hammerjs": "^2.0.8",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

@@ -3,51 +3,51 @@
   <div *ngIf="action != 'Delete'; else elseTemplate">
     <div *ngIf="from =='from-assignment'" style="width: 100%">
       <mat-form-field>
-        <textarea *ngIf="fieldName==='memo'" placeholder="{{action.substring(0, action.indexOf('-'))}} {{fieldName}}" matInput [(ngModel)]="local_data.memo" rows="5"></textarea>
-        <input *ngIf="fieldName==='timeLimit'" placeholder="{{action.substring(0, action.indexOf('-'))}} {{fieldName}}" matInput [(ngModel)]="local_data.timeLimit">
+        <textarea *ngIf="fieldName==='memo'" placeholder="{{action.substring(0, action.indexOf('-'))}} {{fieldName}}" matInput [(ngModel)]="localData.memo" rows="5"></textarea>
+        <input *ngIf="fieldName==='timeLimit'" placeholder="{{action.substring(0, action.indexOf('-'))}} {{fieldName}}" matInput [(ngModel)]="localData.timeLimit">
       </mat-form-field>
     </div>
     <div *ngIf="from.indexOf('from-history-')>=0" style="width: 100%">
-      <mat-label>Meeting for -- {{local_data.date}}</mat-label>
+      <mat-label>Meeting for -- {{localData.date}}</mat-label>
       <mat-form-field appearance="outline" style="width: 90%">
         <mat-label>Role</mat-label>
-        <mat-select  [(value)]="local_data.roleId">
+        <mat-select  [(value)]="localData.roleId">
           <mat-option *ngFor="let role of roles" [value]="role.guid">{{role.roleName}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" style="width: 90%;">
         <mat-label>Member Name</mat-label>
-        <mat-select  [(value)]="local_data.assignedTo">
+        <mat-select  [(value)]="localData.assignedTo">
           <mat-option *ngFor="let member of members" [value]="member.guid">{{member.lastName + ', ' + member.firstName}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
     <div *ngIf="from == 'from-new-history'" style="width: 100%">
       <mat-form-field>
-        <input matInput [max]="maxDate" [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" [(ngModel)]="local_data.date"  placeholder="History Meeting Date">
+        <input matInput [max]="maxDate" [matDatepickerFilter]="dateFilter" [matDatepicker]="picker" [(ngModel)]="localData.date" placeholder="History Meeting Date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
     </div>
     <div *ngIf="from == 'from-role'" style="width: 100%">
       <mat-form-field>
-        <input required placeholder="Role Name" matInput [(ngModel)]="local_data.roleName">
+        <input required placeholder="Role Name" matInput [(ngModel)]="localData.roleName">
       </mat-form-field>
       <mat-form-field appearance="fill">
-        <mat-select [(value)]="local_data.isSpeakerRole">
+        <mat-select [(value)]="localData.isSpeakerRole">
           <mat-option [value]="false">No</mat-option>
           <mat-option [value]="true">Yes</mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field>
-        <input type="number" required min="1" placeholder="Weight" matInput [(ngModel)]="local_data.weight">
+        <input type="number" required min="1" placeholder="Weight" matInput [(ngModel)]="localData.weight">
       </mat-form-field>
       <mat-form-field>
-        <input type="number" required min="1" placeholder="Sort Index" matInput [(ngModel)]="local_data.sortIndex">
+        <input type="number" required min="1" placeholder="Sort Index" matInput [(ngModel)]="localData.sortIndex">
       </mat-form-field>
       <mat-form-field appearance="fill">
-        <mat-select [(value)]="local_data.activated">
+        <mat-select [(value)]="localData.activated">
           <mat-option [value]="false">No</mat-option>
           <mat-option [value]="true">Yes</mat-option>
         </mat-select>
@@ -55,7 +55,7 @@
     </div>
   </div>
   <ng-template #elseTemplate>
-    Are you sure to delete <b *ngIf="from =='from-member'">{{local_data.firstName}}  {{local_data.lastName}}</b>?
+    Are you sure to delete <b *ngIf="from =='from-member'">{{localData.firstName}}  {{localData.lastName}}</b>?
   </ng-template>
 </div>
 <br/>

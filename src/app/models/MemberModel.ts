@@ -6,9 +6,9 @@ export class MemberModel
   lastName: string;
   ageLevel: number;
   canAssignRoles: string;
-  canBeRoles: Array<{'roleName': string, 'sortIndex':number}>;
+  canBeRoles: Array<{'roleName': string, 'sortIndex': number}>;
   email: string;
-  primaryGuardian:number;
+  primaryGuardian: number;
   guardian: string;
   totalWeightInHistory: number;
 
