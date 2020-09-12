@@ -77,7 +77,8 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('user')) {
+    // if (localStorage.getItem('user')) {
+    if (Util.getCookie('user')) {
       this.isLogined = true;
     }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
+import Util from '../utility/util';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    if (localStorage.getItem('user')) {
+    // if (localStorage.getItem('user')) {
+    if (Util.getCookie('user')) {
       this.logout();
     }
   }
@@ -48,8 +50,9 @@ export class LoginComponent implements OnInit {
 
     // Sign in existing user
     this.afAuth.signInWithEmailAndPassword(this.f.email.value, this.f.password.value).then(u => {
-      const user = {email: u.user.email, name: u.user.displayName};
-      localStorage.setItem('user', JSON.stringify(user));
+      const user = u.user.email.toString();
+      Util.setCookie('user', user, 1);
+      // localStorage.setItem('user', JSON.stringify(user));
       this.router.navigate(['/']);
     })
       .catch((err) => {
@@ -61,7 +64,8 @@ export class LoginComponent implements OnInit {
 
   logout() {
     // remove user from local storage and set current user to null
-    localStorage.removeItem('user');
+    Util.deleteCookie('user');
+    // localStorage.removeItem('user');
     this.router.navigate(['/']);
   }
 

@@ -1,4 +1,5 @@
 import {AfterContentChecked, Component, OnInit} from '@angular/core';
+import Util from './utility/util';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ export class AppComponent implements OnInit, AfterContentChecked {
 
   }
   ngAfterContentChecked(){
-    if (localStorage.getItem('user')) {
+    // if (localStorage.getItem('user')) {
+    if (Util.getCookie('user')) {
       this.loginLabel = 'Logout';
       this.isLogined = false;
     }
