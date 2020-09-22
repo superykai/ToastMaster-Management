@@ -1,4 +1,5 @@
 import {format} from 'util';
+import {AngularFireList} from "@angular/fire/database";
 
 export default class Util {
   static getFileExtension(filename): string {
@@ -72,5 +73,56 @@ export default class Util {
 
     // Set it
     document.cookie = `${name}=;expires=${date.toUTCString()};path=/`;
+  }
+
+  static agendaGenerator(tableCurrent, tableNext, tableNextNext){
+    let htmlAgenda ='';
+    if (tableCurrent.length>0) {
+      htmlAgenda += '<table border="0"><tr><td>' + tableCurrent[0].date + '  Sunday Hope Toastmaster Meeting' + '</td></tr>' +
+        '<tr><td>' + 'Time: 7:00PM - 8:30PM' + '</td></tr>' +
+        '<tr><td>' + 'Location: Zoom Meeting' + '</td></tr>' +
+        '<tr><td>' + 'Theme:' + '</td></tr>';
+
+      tableCurrent.forEach(m => {
+        if (m.memberName.trim().length > 0) {
+          if (m.roleName.toLowerCase().indexOf('toastmaster') >= 0
+            || m.roleName.toLowerCase().indexOf('speaker 1') >= 0
+            || m.roleName.toLowerCase().indexOf('evaluator 1') >= 0
+            || m.roleName.toLowerCase().indexOf('general evaluator') >= 0) {
+            htmlAgenda += '<tr><td><br/></td></tr>'
+          }
+          htmlAgenda += '<tr><td>' + m.roleName + ': ' + m.memberName + '</td></tr>'
+        }
+      });
+      htmlAgenda += '</table><br/>';
+      htmlAgenda += '<table border="0"><tr><td>Join Zoom Meeting</td></tr>'+
+        '<tr><td><a href="https://zoom.us/j/615410090?pwd=amN5VzVIV2phSld2cTNIdUdBeW9rdz09">https://zoom.us/j/615410090?pwd=amN5VzVIV2phSld2cTNIdUdBeW9rdz09</a></td></tr>' +
+        '<tr><td><br/></td></tr>' +
+        '<tr><td>Meeting ID: 615 410 090</td></tr>' +
+        '<tr><td>Password: hope2020</td></tr></table><br/>';
+    }
+
+    if (tableNext.length > 0){
+      htmlAgenda += '<table border="0"><tr><td>' + tableNext[0].date + '  Speakers' + '</td></tr>';
+
+      tableNext.forEach(m => {
+        if (m.memberName.trim().length > 0) {
+          htmlAgenda += '<tr><td>' + m.roleName + ': ' + m.memberName + '</td></tr>'
+        }
+      });
+      htmlAgenda += '</table><br/>';
+    }
+
+    if (tableNextNext.length > 0){
+      htmlAgenda += '<table border="0"><tr><td>' + tableNextNext[0].date + '  Speakers' + '</td></tr>';
+
+      tableNextNext.forEach(m => {
+        if (m.memberName.trim().length > 0) {
+          htmlAgenda += '<tr><td>' + m.roleName + ': ' + m.memberName + '</td></tr>'
+        }
+      });
+      htmlAgenda += '</table><br/>';
+    }
+      return htmlAgenda;
   }
 }

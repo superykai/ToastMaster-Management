@@ -185,98 +185,11 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     this.submitBtnEnabled = !!(this.currentMeetDate && this.nextNextMeetDate && this.nextMeetDate);
   }
 
-  // reCheckUpTheExistingRoleAssignments(localMeetingRolesArray,clubMeeting){
-  //   if (clubMeeting && clubMeeting.length > 0){
-  //     clubMeeting.forEach(c => {
-  //       let _member = this.members.find(m => m.guid ===c.assignedTo);
-  //       if (_member){
-  //         if (_member.canAssignRoles.indexOf(c.roleId.toString()) >= 0){
-  //           // this person profile changed, need to remove it from assignment table
-  //           localMeetingRolesArray.push(c);
-  //         }
-  //       }
-  //     });
-  //   }
-  // }
-
   reGenerateBtnClicked(){
     this.moveUpMeetings();
     setTimeout(() => this.generateCurrentAssignments(), 1000);
   }
 
-  // generateCurrentAssignments(){
-  //
-  //   this.submitBtnEnabled = false;
-  //
-  //   this.tableCurrent.remove();
-  //   this.tableNext.remove();
-  //   this.tableNextNext.remove();
-  //   let currentMeetingRoles = new Array();
-  //   let nextMeetingRoles = new Array();
-  //   let nextNextMeetingRoles = new Array();
-  //
-  //   //how many history records do we need
-  //   this.history=new Array<ClubMeetingModel>();
-  //
-  //   let totalMembers = this.members.length;
-  //   let totalHistories = this.listOfHistories.length;
-  //   let totalRoles = this.roles.length;
-  //
-  //   let numOfHistoriesNeed = totalMembers; // Math.floor(totalMembers / totalRoles);
-  //   if (totalHistories < numOfHistoriesNeed)
-  //     numOfHistoriesNeed = totalHistories;
-  //
-  //   if (numOfHistoriesNeed > 0) {
-  //     for (let i = totalHistories-1; i >= totalHistories-numOfHistoriesNeed; i--) {
-  //       for (const [key, val] of Object.entries(this.listOfHistories[i] as Array<ClubMeetingModel>)) {
-  //         this.history.push({
-  //         'key': key, 'roleName': val.roleName, 'timeLimit':val.timeLimit, 'sortIndex': val.sortIndex,
-  //         'memberName': val.memberName, 'assignedTo': val.assignedTo, 'roleId': val.roleId, 'date': val.date,
-  //         'email':val.email, 'memo':val.memo});
-  //       }
-  //     }
-  //   }
-  //
-  //   //calculate the weights for each members based on history roles
-  //   this.calculateWeights();
-  //
-  //
-  //   //start generate current role assignment, first sort from the person no done any role in history first, then done more roles
-  //   this.members.sort((a, b) => (a.totalWeightInHistory+a.ageLevel) - (b.totalWeightInHistory+b.ageLevel));
-  //
-  //
-  //   this.roles.sort((a,b) => b.weight - a.weight);
-  //
-  //   this.reCheckUpTheExistingRoleAssignments(currentMeetingRoles,this.current);
-  //   this.reCheckUpTheExistingRoleAssignments(nextMeetingRoles, this.nextMeet);
-  //   this.reCheckUpTheExistingRoleAssignments(nextNextMeetingRoles, this.nextNextMeet);
-  //
-  //   this.doingAssignments(currentMeetingRoles, nextMeetingRoles, nextNextMeetingRoles, this.tableCurrent, this.currentMeetDate, false);
-  //   this.doingAssignments(nextMeetingRoles,currentMeetingRoles,nextNextMeetingRoles, this.tableNext, this.nextMeetDate, true);
-  //   this.doingAssignments(nextNextMeetingRoles,currentMeetingRoles,nextMeetingRoles, this.tableNextNext, this.nextNextMeetDate, true);
-  //
-  //
-  //  // this.initializeMe();
-  //   setTimeout(()=> this.checkButtonEnabled(),800);
-  //
-  //   console.log(currentMeetingRoles, nextMeetingRoles,nextNextMeetingRoles);
-  //
-  // }
-
-
-  // calculateWeights(){
-  //   this.members.forEach(member => {
-  //     let totalWeightForOneMember = 0;
-  //     if (this.history && this.history.length>0) {
-  //       let totalOneMemberInHistory = this.history.filter(h => h.assignedTo === member.guid);
-  //       totalOneMemberInHistory.forEach(o => {
-  //         totalWeightForOneMember = totalWeightForOneMember + Number((this.roles.filter(r => r.guid === o.roleId)[0]).weight);
-  //       });
-  //     }
-  //     member.totalWeightInHistory = totalWeightForOneMember;
-  //   });
-  //
-  // }
 
   generateCurrentAssignments(){
     this.members.sort((a, b) => (a.firstName + a.lastName).localeCompare(b.firstName + b.lastName));
@@ -438,57 +351,6 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     });
   }
 
-  // doingAssignments(theOneWorkingOn, firstPrevious, secondPrevious, whichTable, meetDate, isForSpeakerRoleOnly){
-  //   let _Roles = this.roles;
-  //   if (isForSpeakerRoleOnly)
-  //     _Roles = this.roles.filter(r=>r.isSpeakerRole);
-  //   for (let cnt = 0; cnt < this.members.length; cnt++){
-  //     if (firstPrevious.filter(cmr => cmr.assignedTo === this.members[cnt].guid).length > 0
-  //       || secondPrevious.filter(cmr => cmr.assignedTo === this.members[cnt].guid).length > 0
-  //       || (theOneWorkingOn.length>0 && theOneWorkingOn.filter(cmr => cmr.assignedTo === this.members[cnt].guid).length > 0)){
-  //       //already had this person assigned, skip to next one
-  //       continue;
-  //     } else{
-  //       for (let ridex = 0; ridex < _Roles.length; ridex++) {
-  //         if (theOneWorkingOn.length > 0 && theOneWorkingOn.filter(cmr => cmr.roleId === _Roles[ridex].guid).length > 0){
-  //           //already had this role assigned, skip to next one
-  //           continue;
-  //         } else{
-  //           if (this.members[cnt].canAssignRoles.indexOf(_Roles[ridex].guid.toString())>=0 ) {
-  //             //only add this member to this role if his canAssignedRoles collection has this option allowed
-  //             this.ArrayObjectPush(theOneWorkingOn,meetDate,ridex,cnt);
-  //           }
-  //           break;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   try {theOneWorkingOn.sort((a, b) => a.sortIndex - b.sortIndex);} catch(ex){}
-  //   theOneWorkingOn.forEach(r => {
-  //     if (r.key) {
-  //       delete r.key;
-  //     }
-  //     r.date = util.GetFormattedDate(meetDate);
-  //     whichTable.push(r)
-  //   });
-  // }
-  //
-  //
-  // ArrayObjectPush(ArrayObject, MeetingDate, RoleIndex, TableIndex){
-  //   const jsonData = {
-  //     'assignedTo': this.members[TableIndex].guid,
-  //     'date': util.GetFormattedDate(MeetingDate),
-  //     'memberName': this.members[TableIndex].lastName + ', ' + this.members[TableIndex].firstName,
-  //     'email': this.members[TableIndex].email.trim().length>0? this.members[TableIndex].email :
-  //     this.members.find(m=>m.guid ===this.members[TableIndex].primaryGuardian).email,
-  //     'roleId': this.roles[RoleIndex].guid,
-  //     'roleName': this.roles[RoleIndex].roleName,
-  //     'timeLimit': this.roles[RoleIndex].isSpeakerRole? '5 - 7 Mins':'',
-  //     'memo':'',
-  //     'sortIndex': this.roles[RoleIndex].sortIndex
-  //   };
-  //   ArrayObject.push(jsonData);
-  // }
 
   updateCurrentTable(element){
     this.rebuildElementArray(element);
@@ -513,12 +375,18 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
       element.timeLimit = '';
     }
     element.memo = '';
+    element.email = '';
+    element.memberName = '';
     const foundMember = this.members.find(m => m.guid === element.assignedTo);
-    if (foundMember.email.length > 0){
-      element.email = foundMember.email;
-    }
-    else {
-      element.email = this.members.find(m => m.guid === foundMember.primaryGuardian).email;
+
+    if (foundMember) {
+      element.memberName = foundMember.firstName + ' ' + foundMember.lastName;
+
+      if (foundMember.email.length > 0) {
+        element.email = foundMember.email;
+      } else {
+        element.email = this.members.find(m => m.guid === foundMember.primaryGuardian).email;
+      }
     }
   }
 
@@ -526,8 +394,12 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     obj.action = action;
     obj.from = from;
     obj.fieldName = fieldName;
+    let width = '280px';
+    if (from === 'from-agenda'){
+      width = '350px';
+    }
     const dialogRef = this.dialog.open(DialogBoxComponent, {
-      width: '280px',
+      width: width,
       data: obj
     });
 
@@ -579,6 +451,11 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     if (this.historySubscription) {
       this.historySubscription.unsubscribe();
     }
+  }
+
+  agendaGenerate(){
+    const htmlAgenda = Util.agendaGenerator(this.current, this.nextMeet, this.nextNextMeet);
+    this.openDialog('Ok','from-agenda',htmlAgenda,{});
   }
 
 }

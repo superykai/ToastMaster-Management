@@ -27,6 +27,8 @@
     <button type="submit" class="btn btn-primary" [disabled]="!submitBtnEnabled? 'disabled': null" (click)="reGenerateBtnClicked()">Re-Generate</button>
     &nbsp;&nbsp;&nbsp;
     <button type="submit" class="btn btn-danger" [disabled]="!displayCurrent? 'disabled': null" (click)="reSetBtnClicked()">ReSet</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="submit" class="btn btn-info" [disabled]="!displayCurrent? 'disabled': null" (click)="agendaGenerate()">Print Out Agenda</button>
   </div>
 <hr>
 <br/>
@@ -51,6 +53,7 @@
         <td mat-cell *matCellDef="let element">
           <mat-form-field *ngIf="isLogined" appearance="outline" style="width: 90%;">
             <mat-select  [(value)]="element.assignedTo" (valueChange)="updateCurrentTable(element);">
+              <mat-option value="-1">N/A</mat-option>
               <mat-option *ngFor="let member of members" [value]="member.guid">{{member.lastName + ', ' + member.firstName}}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -118,6 +121,7 @@
       <td mat-cell *matCellDef="let element">
         <mat-form-field *ngIf="isLogined" appearance="outline" style="width: 90%;">
           <mat-select  [(value)]="element.assignedTo" (valueChange)="updateNextTable(element);">
+            <mat-option value="-1">N/A</mat-option>
             <mat-option *ngFor="let member of members" [value]="member.guid">{{member.lastName + ', ' + member.firstName}}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -185,6 +189,7 @@
       <td mat-cell *matCellDef="let element">
         <mat-form-field *ngIf="isLogined" appearance="outline" style="width: 90%;">
           <mat-select  [(value)]="element.assignedTo" (valueChange)="updateNextNextTable(element);">
+            <mat-option value="-1">N/A</mat-option>
             <mat-option *ngFor="let member of members" [value]="member.guid">{{member.lastName + ', ' + member.firstName}}</mat-option>
           </mat-select>
         </mat-form-field>
