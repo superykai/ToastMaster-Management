@@ -458,4 +458,29 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     this.openDialog('Ok','from-agenda',htmlAgenda,{});
   }
 
+  sendEmailForCurrent(){
+    this.sendEmail(this.current);
+  }
+
+  sendEmailForNext(){
+    this.sendEmail(this.nextMeet);
+  }
+
+  sendEmailForNextNext(){
+    this.sendEmail(this.nextNextMeet);
+  }
+
+  sendEmail(meetingArray){
+    if (meetingArray.length>0){
+      meetingArray.forEach(function(c,index) {
+        setTimeout(function() {
+          if (c.roleName.indexOf('Speaker') >= 0)
+            Util.sendEmail(c.roleName, c.memberName, c.email, c.date, true);
+          else
+            Util.sendEmail(c.roleName, c.memberName, c.email, c.date, false);
+        }, 5000 * (index + 1));
+      });
+    }
+  }
+
 }
