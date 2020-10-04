@@ -11,6 +11,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
 import {MatDialog} from '@angular/material/dialog';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-current-role-assignments',
@@ -60,9 +61,10 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
   dataSourceNextNextMeeting: any;
 
   isLogined = false;
+  isDebug = false;
+  memberId = 0;
 
-
-  constructor(private db: AngularFireDatabase,  public dialog: MatDialog) {
+  constructor(private db: AngularFireDatabase,  public dialog: MatDialog, private activeRoute: ActivatedRoute) {
     this.tableMembers = this.db.list<AngularFireList<any>>(environment.memberTable.name, ref => ref.orderByChild('lastName'));
     this.tableRoles = this.db.list<AngularFireList<any>>(environment.roleTable.name, ref => ref.orderByChild('roleName'));
     this.tableHistory = this.db.list<AngularFireList<any>>(environment.assignmentHistoryTable.name, ref => ref.orderByChild('date'));
@@ -74,6 +76,13 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     this.minNextNextDate = new Date();
     this.minNextDate.setDate(this.minDate.getDate() + 1);
     this.minNextNextDate.setDate(this.minNextDate.getDate() + 1);
+    if (this.activeRoute.snapshot.queryParamMap.get('debug')){
+      this.isDebug = true;
+      let _memberId = this.activeRoute.snapshot.queryParamMap.get('memberId')
+      if (_memberId && !isNaN(Number(_memberId))){
+        this.memberId = Number(_memberId);
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -237,8 +246,16 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
          }
         }
      });
-
-       // console.log(historyAllRecords);
+      //-----start --- debugging code -- /?debug=true&memberId=15336
+      if (this.isDebug) {
+        if (this.memberId > 0) {
+          historyAllRecords.forEach(h => {
+            if (h.assignedTo === this.memberId)
+              console.log(h);
+          });
+        }
+        console.log(historyAllRecords);
+      }
 
 
      // at this point, we have each role for each member scoring.
@@ -248,7 +265,7 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
           if (r.activated){
             let whatScoreYouhave = 0;
             const jsonData = {roleId: r.guid, roleName: r.roleName, timeLimit: (r.isSpeakerRole) ? '5 - 7 Mins' : '',
-              sortIndex: r.sortIndex, assignedTo: oneMem.guid,
+              sortIndex: r.sortIndex, assignedTo: oneMem.guid, ageLevel: oneMem.ageLevel,
               memberName: oneMem.firstName + ' ' + oneMem.lastName, memo: '',
               email: (oneMem.email.length > 0) ? oneMem.email :
                 this.members.find(m => m.guid === oneMem.primaryGuardian).email};
@@ -268,33 +285,64 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
             }
           }
         });
-        // each person will combined speaker 1 & 2 score because speaker 1 & 2 dont have separate rotation
+        // each person will combined speaker 1 & 2 & 3 score because speaker 1 & 2 & 3 dont have separate rotation
         const eachMemberSpeaker1 = thisMemberForThisRoleRanking.find(
           tmfrr => tmfrr.roleName === 'Speaker 1' && tmfrr.assignedTo === oneMem.guid);
         const eachMemberSpeaker2 = thisMemberForThisRoleRanking.find(
           tmfrr => tmfrr.roleName === 'Speaker 2' && tmfrr.assignedTo === oneMem.guid);
+        const eachMemberSpeaker3 = thisMemberForThisRoleRanking.find(
+          tmfrr => tmfrr.roleName === 'Speaker 3' && tmfrr.assignedTo === oneMem.guid);
 
         let speakerScore = 0;
-        if (eachMemberSpeaker1 && eachMemberSpeaker2) {
-          speakerScore = eachMemberSpeaker1.score + eachMemberSpeaker2.score;
+
+        speakerScore = (eachMemberSpeaker1? eachMemberSpeaker1.score : 0) + (eachMemberSpeaker2? eachMemberSpeaker2.score : 0) + (eachMemberSpeaker3? eachMemberSpeaker3.score : 0);
+        // if member is adult, then add more score, so they will rotate slower than kids, kids get the role faster
+        if ((eachMemberSpeaker1 && eachMemberSpeaker1.ageLevel ===2) ||
+          (eachMemberSpeaker2 && eachMemberSpeaker2.ageLevel ===2) ||
+          (eachMemberSpeaker3 && eachMemberSpeaker3.ageLevel ===2)) // adult
+          speakerScore += 15;
+        if (eachMemberSpeaker1)
           thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberSpeaker1).score = speakerScore;
+        if (eachMemberSpeaker2)
           thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberSpeaker2).score = speakerScore;
-        }
-        // doing same to evaluator 1 & 2
+        if (eachMemberSpeaker3)
+          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberSpeaker3).score = speakerScore;
+
+        // doing same to evaluator 1 & 2 & 3
         const eachMemberEvaluator1 = thisMemberForThisRoleRanking.find(
           tmfrr => tmfrr.roleName === 'Evaluator 1' && tmfrr.assignedTo === oneMem.guid);
         const eachMemberEvaluator2 = thisMemberForThisRoleRanking.find(
           tmfrr => tmfrr.roleName === 'Evaluator 2' && tmfrr.assignedTo === oneMem.guid);
+        const eachMemberEvaluator3 = thisMemberForThisRoleRanking.find(
+          tmfrr => tmfrr.roleName === 'Evaluator 3' && tmfrr.assignedTo === oneMem.guid);
 
         let evaluatorScore = 0;
-        if (eachMemberEvaluator1 && eachMemberEvaluator2) {
-          evaluatorScore = eachMemberEvaluator1.score + eachMemberEvaluator2.score;
-          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator1).score = evaluatorScore;
-          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator2).score = evaluatorScore;
-        }
-      }
 
-       // console.log(thisMemberForThisRoleRanking);
+        evaluatorScore = (eachMemberEvaluator1? eachMemberEvaluator1.score : 0) + (eachMemberEvaluator2? eachMemberEvaluator2.score : 0) + (eachMemberEvaluator3? eachMemberEvaluator3.score : 0);
+        // if member is adult, then add more score, so they will rotate slower than kids, kids get the role faster
+        if ((eachMemberEvaluator1 && eachMemberEvaluator1.ageLevel ===2) ||
+          (eachMemberEvaluator2 && eachMemberEvaluator2.ageLevel ===2) ||
+          (eachMemberEvaluator3 && eachMemberEvaluator3.ageLevel ===2)) // adult
+          evaluatorScore += 15;
+        if (eachMemberEvaluator1)
+          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator1).score = evaluatorScore;
+        if (eachMemberEvaluator2)
+          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator2).score = evaluatorScore;
+        if (eachMemberEvaluator3)
+          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator3).score = evaluatorScore;
+
+      }
+      //-----start --- debugging code -- /?debug=true&memberId=15336
+      if (this.isDebug) {
+        if (this.memberId > 0) {
+          thisMemberForThisRoleRanking.forEach(t => {
+            if (t.assignedTo === this.memberId)
+              console.log(t);
+          });
+        }
+        console.log('----all members----');
+        console.log(thisMemberForThisRoleRanking);
+      }
 
       // start assign roles for current meeting, do speaker role assignment first
       this.assigningRoles(thisMemberForThisRoleRanking, 'currentAssignment', this.current, this.nextMeet,
@@ -330,7 +378,9 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
       if (r.activated && !whichMeeting.find(wm => wm.roleId === r.guid)) {
         const oneRoleMemberList: Array<any> = thisMemberForThisRoleRanking.filter(ttrr => ttrr.roleId === r.guid);
         oneRoleMemberList.sort((a, b) => a.score - b.score);
-        console.log(oneRoleMemberList);
+        //-----start --- debugging code -- /?debug=true&memberId=15336
+        if (this.isDebug)
+          console.log(oneRoleMemberList);
 
         for (const oneRoleMem of oneRoleMemberList){
           const resultData = {...{date: meetingDate}, ...oneRoleMem};
