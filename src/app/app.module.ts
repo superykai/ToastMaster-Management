@@ -27,6 +27,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { AssignmentHistoryComponent } from './assignment-history/assignment-history.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { LoginComponent } from './login/login.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -43,22 +44,23 @@ import { LoginComponent } from './login/login.component';
     AssignmentHistoryComponent,
     LoginComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-    MatTableModule,
-    MatSortModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireDatabaseModule,
-    AngularFirestoreModule,
-    MatListModule,
-    MatSelectModule,
-    MatProgressSpinnerModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        MaterialModule,
+        ReactiveFormsModule,
+        FormsModule,
+        HttpClientModule,
+        MatTableModule,
+        MatSortModule,
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireDatabaseModule,
+        AngularFirestoreModule,
+        MatListModule,
+        MatSelectModule,
+        MatProgressSpinnerModule,
+        MatDialogModule
+    ],
   entryComponents: [DialogBoxComponent],
   exports: [],
   providers: [DatePipe],

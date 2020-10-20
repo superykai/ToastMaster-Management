@@ -325,7 +325,7 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
         }
      });
 
-       // console.log(historyAllRecords);
+      console.log(historyAllRecords);
 
 
      // at this point, we have each role for each member scoring.
@@ -334,6 +334,7 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
         this.roles.forEach(r => {
           if (r.activated){
             let whatScoreYouhave = 0;
+            let stringHistories = '';
             const jsonData = {roleId: r.guid, roleName: r.roleName, timeLimit: (r.isSpeakerRole) ? '5 - 7 Mins' : '',
               sortIndex: r.sortIndex, assignedTo: oneMem.guid,
               memberName: oneMem.firstName + ' ' + oneMem.lastName, memo: '',
@@ -343,14 +344,16 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
             if (foundRec.length > 0){
               for (const iRec of foundRec) {
                 whatScoreYouhave += Number(iRec.score);
+                stringHistories = stringHistories + iRec.date + ', roleName: ' + iRec.roleName + ', scoreSoFar: ' + whatScoreYouhave + ',';
               }
               if (oneMem.canAssignRoles.indexOf(r.guid.toString()) >= 0) {// only add those can assigned role person in
-                thisMemberForThisRoleRanking.push({...jsonData, ...{score: whatScoreYouhave}}); // + this.members[cnt].ageLevel}});
+                thisMemberForThisRoleRanking.push({...jsonData, ...{score: whatScoreYouhave,
+                    historyRec: stringHistories}}); // + this.members[cnt].ageLevel}});
               }
             }
             else{
               if (oneMem.canAssignRoles.indexOf(r.guid.toString()) >= 0) {// only add those can assigned role person in
-                thisMemberForThisRoleRanking.push({...jsonData, ...{score: 0}});
+                thisMemberForThisRoleRanking.push({...jsonData, ...{score: 0, historyRec: stringHistories}});
               }
             }
           }
@@ -381,7 +384,7 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
         }
       }
 
-       // console.log(thisMemberForThisRoleRanking);
+      console.log(thisMemberForThisRoleRanking);
 
       // start assign roles for current meeting, do speaker role assignment first
       this.assigningRoles(thisMemberForThisRoleRanking, 'currentAssignment', this.current, this.nextMeet,
