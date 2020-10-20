@@ -38,6 +38,10 @@ export const environment = {
   validationEnum: {
     firstNameMax: 100,
     lastNameMax: 100
+  },
+  emailJS:{
+    serviceId: 'service_kdn56fl',
+    userId: 'user_zrIKR9gHxlunVuM48kwuH'
   }
 };
 

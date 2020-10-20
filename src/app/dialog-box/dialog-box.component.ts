@@ -1,4 +1,4 @@
-import {Component, Inject, Optional} from '@angular/core';
+import {AfterViewInit, Component, Inject, Optional} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {ClubMeetingModel} from '../models/ClubMeetingModel';
 import {AngularFireDatabase, AngularFireList} from '@angular/fire/database';
@@ -13,7 +13,7 @@ import Util from '../utility/util';
   templateUrl: './dialog-box.component.html',
   styleUrls: ['./dialog-box.component.css']
 })
-export class DialogBoxComponent {
+export class DialogBoxComponent implements AfterViewInit{
 
   fieldName: string;
   action: string;
@@ -60,6 +60,13 @@ export class DialogBoxComponent {
          this.dateFilter = (date: Date | null) => dateStringArray.indexOf(Util.GetFormattedDate(date)) < 0;
        }
      } catch (ex){}
+    }
+
+  }
+
+  ngAfterViewInit(): void {
+    if (this.from === 'from-agenda'){
+      document.getElementById('agendaContent').innerHTML = this.fieldName;
     }
   }
 

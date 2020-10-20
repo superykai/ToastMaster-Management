@@ -27,11 +27,13 @@
     <button type="submit" class="btn btn-primary" [disabled]="!submitBtnEnabled? 'disabled': null" (click)="reGenerateBtnClicked()">Re-Generate</button>
     &nbsp;&nbsp;&nbsp;
     <button type="submit" class="btn btn-danger" [disabled]="!displayCurrent? 'disabled': null" (click)="reSetBtnClicked()">ReSet</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="submit" class="btn btn-info" [disabled]="!displayCurrent? 'disabled': null" (click)="agendaGenerate()">Print Out Agenda</button>
   </div>
 <hr>
 <br/>
   <div *ngIf="displayCurrent && displayCurrent.length>0">
-    <legend>Meeting For -- {{displayCurrent[0].date}}   &nbsp; <button *ngIf="isLogined" type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
+    <legend>Meeting For -- {{displayCurrent[0].date}}   &nbsp; <button *ngIf="isLogined" type="submit" (click)="sendEmailForCurrent()" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
     <table mat-table [dataSource]="dataSourceCurrent" matSort class="mat-elevation-z8">
 
       <ng-container matColumnDef="roleName">
@@ -99,7 +101,7 @@
 <br/>
 <hr>
 <div *ngIf="displayNextMeet && displayNextMeet.length>0">
-  <legend>Meeting For -- {{displayNextMeet[0].date}}   &nbsp; <button *ngIf="isLogined" type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
+  <legend>Meeting For -- {{displayNextMeet[0].date}}   &nbsp; <button *ngIf="isLogined" type="submit" (click)="sendEmailForNext()" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
   <table mat-table [dataSource]="dataSourceNextMeeting" matSort class="mat-elevation-z8">
 
     <ng-container matColumnDef="roleName">
@@ -167,7 +169,7 @@
 <br/>
 <hr>
 <div *ngIf="displayNextNextMeet && displayNextNextMeet.length>0">
-  <legend>Meeting For -- {{displayNextNextMeet[0].date}}   &nbsp; <button *ngIf="isLogined" type="submit" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
+  <legend>Meeting For -- {{displayNextNextMeet[0].date}}   &nbsp; <button *ngIf="isLogined" type="submit" (click)="sendEmailForNextNext()" class="btn btn-sm btn-success">Send Reminder Email</button></legend>
   <table mat-table [dataSource]="dataSourceNextNextMeeting" matSort class="mat-elevation-z8">
 
     <ng-container matColumnDef="roleName">

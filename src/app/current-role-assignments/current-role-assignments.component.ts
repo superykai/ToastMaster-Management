@@ -11,6 +11,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
 import {MatDialog} from '@angular/material/dialog';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-current-role-assignments',
@@ -60,9 +61,10 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
   dataSourceNextNextMeeting: any;
 
   isLogined = false;
+  isDebug = false;
+  memberId = 0;
 
-
-  constructor(private db: AngularFireDatabase,  public dialog: MatDialog) {
+  constructor(private db: AngularFireDatabase,  public dialog: MatDialog, private activeRoute: ActivatedRoute) {
     this.tableMembers = this.db.list<AngularFireList<any>>(environment.memberTable.name, ref => ref.orderByChild('lastName'));
     this.tableRoles = this.db.list<AngularFireList<any>>(environment.roleTable.name, ref => ref.orderByChild('roleName'));
     this.tableHistory = this.db.list<AngularFireList<any>>(environment.assignmentHistoryTable.name, ref => ref.orderByChild('date'));
@@ -74,6 +76,13 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     this.minNextNextDate = new Date();
     this.minNextDate.setDate(this.minDate.getDate() + 1);
     this.minNextNextDate.setDate(this.minNextDate.getDate() + 1);
+    if (this.activeRoute.snapshot.queryParamMap.get('debug')){
+      this.isDebug = true;
+      let _memberId = this.activeRoute.snapshot.queryParamMap.get('memberId')
+      if (_memberId && !isNaN(Number(_memberId))){
+        this.memberId = Number(_memberId);
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -185,98 +194,11 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     this.submitBtnEnabled = !!(this.currentMeetDate && this.nextNextMeetDate && this.nextMeetDate);
   }
 
-  // reCheckUpTheExistingRoleAssignments(localMeetingRolesArray,clubMeeting){
-  //   if (clubMeeting && clubMeeting.length > 0){
-  //     clubMeeting.forEach(c => {
-  //       let _member = this.members.find(m => m.guid ===c.assignedTo);
-  //       if (_member){
-  //         if (_member.canAssignRoles.indexOf(c.roleId.toString()) >= 0){
-  //           // this person profile changed, need to remove it from assignment table
-  //           localMeetingRolesArray.push(c);
-  //         }
-  //       }
-  //     });
-  //   }
-  // }
-
   reGenerateBtnClicked(){
     this.moveUpMeetings();
     setTimeout(() => this.generateCurrentAssignments(), 1000);
   }
 
-  // generateCurrentAssignments(){
-  //
-  //   this.submitBtnEnabled = false;
-  //
-  //   this.tableCurrent.remove();
-  //   this.tableNext.remove();
-  //   this.tableNextNext.remove();
-  //   let currentMeetingRoles = new Array();
-  //   let nextMeetingRoles = new Array();
-  //   let nextNextMeetingRoles = new Array();
-  //
-  //   //how many history records do we need
-  //   this.history=new Array<ClubMeetingModel>();
-  //
-  //   let totalMembers = this.members.length;
-  //   let totalHistories = this.listOfHistories.length;
-  //   let totalRoles = this.roles.length;
-  //
-  //   let numOfHistoriesNeed = totalMembers; // Math.floor(totalMembers / totalRoles);
-  //   if (totalHistories < numOfHistoriesNeed)
-  //     numOfHistoriesNeed = totalHistories;
-  //
-  //   if (numOfHistoriesNeed > 0) {
-  //     for (let i = totalHistories-1; i >= totalHistories-numOfHistoriesNeed; i--) {
-  //       for (const [key, val] of Object.entries(this.listOfHistories[i] as Array<ClubMeetingModel>)) {
-  //         this.history.push({
-  //         'key': key, 'roleName': val.roleName, 'timeLimit':val.timeLimit, 'sortIndex': val.sortIndex,
-  //         'memberName': val.memberName, 'assignedTo': val.assignedTo, 'roleId': val.roleId, 'date': val.date,
-  //         'email':val.email, 'memo':val.memo});
-  //       }
-  //     }
-  //   }
-  //
-  //   //calculate the weights for each members based on history roles
-  //   this.calculateWeights();
-  //
-  //
-  //   //start generate current role assignment, first sort from the person no done any role in history first, then done more roles
-  //   this.members.sort((a, b) => (a.totalWeightInHistory+a.ageLevel) - (b.totalWeightInHistory+b.ageLevel));
-  //
-  //
-  //   this.roles.sort((a,b) => b.weight - a.weight);
-  //
-  //   this.reCheckUpTheExistingRoleAssignments(currentMeetingRoles,this.current);
-  //   this.reCheckUpTheExistingRoleAssignments(nextMeetingRoles, this.nextMeet);
-  //   this.reCheckUpTheExistingRoleAssignments(nextNextMeetingRoles, this.nextNextMeet);
-  //
-  //   this.doingAssignments(currentMeetingRoles, nextMeetingRoles, nextNextMeetingRoles, this.tableCurrent, this.currentMeetDate, false);
-  //   this.doingAssignments(nextMeetingRoles,currentMeetingRoles,nextNextMeetingRoles, this.tableNext, this.nextMeetDate, true);
-  //   this.doingAssignments(nextNextMeetingRoles,currentMeetingRoles,nextMeetingRoles, this.tableNextNext, this.nextNextMeetDate, true);
-  //
-  //
-  //  // this.initializeMe();
-  //   setTimeout(()=> this.checkButtonEnabled(),800);
-  //
-  //   console.log(currentMeetingRoles, nextMeetingRoles,nextNextMeetingRoles);
-  //
-  // }
-
-
-  // calculateWeights(){
-  //   this.members.forEach(member => {
-  //     let totalWeightForOneMember = 0;
-  //     if (this.history && this.history.length>0) {
-  //       let totalOneMemberInHistory = this.history.filter(h => h.assignedTo === member.guid);
-  //       totalOneMemberInHistory.forEach(o => {
-  //         totalWeightForOneMember = totalWeightForOneMember + Number((this.roles.filter(r => r.guid === o.roleId)[0]).weight);
-  //       });
-  //     }
-  //     member.totalWeightInHistory = totalWeightForOneMember;
-  //   });
-  //
-  // }
 
   generateCurrentAssignments(){
     this.members.sort((a, b) => (a.firstName + a.lastName).localeCompare(b.firstName + b.lastName));
@@ -324,8 +246,16 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
          }
         }
      });
-
-      console.log(historyAllRecords);
+      //-----start --- debugging code -- /?debug=true&memberId=15336
+      if (this.isDebug) {
+        if (this.memberId > 0) {
+          historyAllRecords.forEach(h => {
+            if (h.assignedTo === this.memberId)
+              console.log(h);
+          });
+        }
+        console.log(historyAllRecords);
+      }
 
 
      // at this point, we have each role for each member scoring.
@@ -334,9 +264,8 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
         this.roles.forEach(r => {
           if (r.activated){
             let whatScoreYouhave = 0;
-            let stringHistories = '';
             const jsonData = {roleId: r.guid, roleName: r.roleName, timeLimit: (r.isSpeakerRole) ? '5 - 7 Mins' : '',
-              sortIndex: r.sortIndex, assignedTo: oneMem.guid,
+              sortIndex: r.sortIndex, assignedTo: oneMem.guid, ageLevel: oneMem.ageLevel,
               memberName: oneMem.firstName + ' ' + oneMem.lastName, memo: '',
               email: (oneMem.email.length > 0) ? oneMem.email :
                 this.members.find(m => m.guid === oneMem.primaryGuardian).email};
@@ -344,47 +273,76 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
             if (foundRec.length > 0){
               for (const iRec of foundRec) {
                 whatScoreYouhave += Number(iRec.score);
-                stringHistories = stringHistories + iRec.date + ', roleName: ' + iRec.roleName + ', scoreSoFar: ' + whatScoreYouhave + ',';
               }
               if (oneMem.canAssignRoles.indexOf(r.guid.toString()) >= 0) {// only add those can assigned role person in
-                thisMemberForThisRoleRanking.push({...jsonData, ...{score: whatScoreYouhave,
-                    historyRec: stringHistories}}); // + this.members[cnt].ageLevel}});
+                thisMemberForThisRoleRanking.push({...jsonData, ...{score: whatScoreYouhave}}); // + this.members[cnt].ageLevel}});
               }
             }
             else{
               if (oneMem.canAssignRoles.indexOf(r.guid.toString()) >= 0) {// only add those can assigned role person in
-                thisMemberForThisRoleRanking.push({...jsonData, ...{score: 0, historyRec: stringHistories}});
+                thisMemberForThisRoleRanking.push({...jsonData, ...{score: 0}});
               }
             }
           }
         });
-        // each person will combined speaker 1 & 2 score because speaker 1 & 2 dont have separate rotation
+        // each person will combined speaker 1 & 2 & 3 score because speaker 1 & 2 & 3 dont have separate rotation
         const eachMemberSpeaker1 = thisMemberForThisRoleRanking.find(
           tmfrr => tmfrr.roleName === 'Speaker 1' && tmfrr.assignedTo === oneMem.guid);
         const eachMemberSpeaker2 = thisMemberForThisRoleRanking.find(
           tmfrr => tmfrr.roleName === 'Speaker 2' && tmfrr.assignedTo === oneMem.guid);
+        const eachMemberSpeaker3 = thisMemberForThisRoleRanking.find(
+          tmfrr => tmfrr.roleName === 'Speaker 3' && tmfrr.assignedTo === oneMem.guid);
 
         let speakerScore = 0;
-        if (eachMemberSpeaker1 && eachMemberSpeaker2) {
-          speakerScore = eachMemberSpeaker1.score + eachMemberSpeaker2.score;
+
+        speakerScore = (eachMemberSpeaker1? eachMemberSpeaker1.score : 0) + (eachMemberSpeaker2? eachMemberSpeaker2.score : 0) + (eachMemberSpeaker3? eachMemberSpeaker3.score : 0);
+        // if member is adult, then add more score, so they will rotate slower than kids, kids get the role faster
+        if ((eachMemberSpeaker1 && eachMemberSpeaker1.ageLevel ===2) ||
+          (eachMemberSpeaker2 && eachMemberSpeaker2.ageLevel ===2) ||
+          (eachMemberSpeaker3 && eachMemberSpeaker3.ageLevel ===2)) // adult
+          speakerScore += 15;
+        if (eachMemberSpeaker1)
           thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberSpeaker1).score = speakerScore;
+        if (eachMemberSpeaker2)
           thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberSpeaker2).score = speakerScore;
-        }
-        // doing same to evaluator 1 & 2
+        if (eachMemberSpeaker3)
+          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberSpeaker3).score = speakerScore;
+
+        // doing same to evaluator 1 & 2 & 3
         const eachMemberEvaluator1 = thisMemberForThisRoleRanking.find(
           tmfrr => tmfrr.roleName === 'Evaluator 1' && tmfrr.assignedTo === oneMem.guid);
         const eachMemberEvaluator2 = thisMemberForThisRoleRanking.find(
           tmfrr => tmfrr.roleName === 'Evaluator 2' && tmfrr.assignedTo === oneMem.guid);
+        const eachMemberEvaluator3 = thisMemberForThisRoleRanking.find(
+          tmfrr => tmfrr.roleName === 'Evaluator 3' && tmfrr.assignedTo === oneMem.guid);
 
         let evaluatorScore = 0;
-        if (eachMemberEvaluator1 && eachMemberEvaluator2) {
-          evaluatorScore = eachMemberEvaluator1.score + eachMemberEvaluator2.score;
-          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator1).score = evaluatorScore;
-          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator2).score = evaluatorScore;
-        }
-      }
 
-      console.log(thisMemberForThisRoleRanking);
+        evaluatorScore = (eachMemberEvaluator1? eachMemberEvaluator1.score : 0) + (eachMemberEvaluator2? eachMemberEvaluator2.score : 0) + (eachMemberEvaluator3? eachMemberEvaluator3.score : 0);
+        // if member is adult, then add more score, so they will rotate slower than kids, kids get the role faster
+        if ((eachMemberEvaluator1 && eachMemberEvaluator1.ageLevel ===2) ||
+          (eachMemberEvaluator2 && eachMemberEvaluator2.ageLevel ===2) ||
+          (eachMemberEvaluator3 && eachMemberEvaluator3.ageLevel ===2)) // adult
+          evaluatorScore += 15;
+        if (eachMemberEvaluator1)
+          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator1).score = evaluatorScore;
+        if (eachMemberEvaluator2)
+          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator2).score = evaluatorScore;
+        if (eachMemberEvaluator3)
+          thisMemberForThisRoleRanking.find(tmfrr => tmfrr === eachMemberEvaluator3).score = evaluatorScore;
+
+      }
+      //-----start --- debugging code -- /?debug=true&memberId=15336
+      if (this.isDebug) {
+        if (this.memberId > 0) {
+          thisMemberForThisRoleRanking.forEach(t => {
+            if (t.assignedTo === this.memberId)
+              console.log(t);
+          });
+        }
+        console.log('----all members----');
+        console.log(thisMemberForThisRoleRanking);
+      }
 
       // start assign roles for current meeting, do speaker role assignment first
       this.assigningRoles(thisMemberForThisRoleRanking, 'currentAssignment', this.current, this.nextMeet,
@@ -420,7 +378,9 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
       if (r.activated && !whichMeeting.find(wm => wm.roleId === r.guid)) {
         const oneRoleMemberList: Array<any> = thisMemberForThisRoleRanking.filter(ttrr => ttrr.roleId === r.guid);
         oneRoleMemberList.sort((a, b) => a.score - b.score);
-        console.log(oneRoleMemberList);
+        //-----start --- debugging code -- /?debug=true&memberId=15336
+        if (this.isDebug)
+          console.log(oneRoleMemberList);
 
         for (const oneRoleMem of oneRoleMemberList){
           const resultData = {...{date: meetingDate}, ...oneRoleMem};
@@ -441,57 +401,6 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     });
   }
 
-  // doingAssignments(theOneWorkingOn, firstPrevious, secondPrevious, whichTable, meetDate, isForSpeakerRoleOnly){
-  //   let _Roles = this.roles;
-  //   if (isForSpeakerRoleOnly)
-  //     _Roles = this.roles.filter(r=>r.isSpeakerRole);
-  //   for (let cnt = 0; cnt < this.members.length; cnt++){
-  //     if (firstPrevious.filter(cmr => cmr.assignedTo === this.members[cnt].guid).length > 0
-  //       || secondPrevious.filter(cmr => cmr.assignedTo === this.members[cnt].guid).length > 0
-  //       || (theOneWorkingOn.length>0 && theOneWorkingOn.filter(cmr => cmr.assignedTo === this.members[cnt].guid).length > 0)){
-  //       //already had this person assigned, skip to next one
-  //       continue;
-  //     } else{
-  //       for (let ridex = 0; ridex < _Roles.length; ridex++) {
-  //         if (theOneWorkingOn.length > 0 && theOneWorkingOn.filter(cmr => cmr.roleId === _Roles[ridex].guid).length > 0){
-  //           //already had this role assigned, skip to next one
-  //           continue;
-  //         } else{
-  //           if (this.members[cnt].canAssignRoles.indexOf(_Roles[ridex].guid.toString())>=0 ) {
-  //             //only add this member to this role if his canAssignedRoles collection has this option allowed
-  //             this.ArrayObjectPush(theOneWorkingOn,meetDate,ridex,cnt);
-  //           }
-  //           break;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   try {theOneWorkingOn.sort((a, b) => a.sortIndex - b.sortIndex);} catch(ex){}
-  //   theOneWorkingOn.forEach(r => {
-  //     if (r.key) {
-  //       delete r.key;
-  //     }
-  //     r.date = util.GetFormattedDate(meetDate);
-  //     whichTable.push(r)
-  //   });
-  // }
-  //
-  //
-  // ArrayObjectPush(ArrayObject, MeetingDate, RoleIndex, TableIndex){
-  //   const jsonData = {
-  //     'assignedTo': this.members[TableIndex].guid,
-  //     'date': util.GetFormattedDate(MeetingDate),
-  //     'memberName': this.members[TableIndex].lastName + ', ' + this.members[TableIndex].firstName,
-  //     'email': this.members[TableIndex].email.trim().length>0? this.members[TableIndex].email :
-  //     this.members.find(m=>m.guid ===this.members[TableIndex].primaryGuardian).email,
-  //     'roleId': this.roles[RoleIndex].guid,
-  //     'roleName': this.roles[RoleIndex].roleName,
-  //     'timeLimit': this.roles[RoleIndex].isSpeakerRole? '5 - 7 Mins':'',
-  //     'memo':'',
-  //     'sortIndex': this.roles[RoleIndex].sortIndex
-  //   };
-  //   ArrayObject.push(jsonData);
-  // }
 
   updateCurrentTable(element){
     this.rebuildElementArray(element);
@@ -516,12 +425,18 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
       element.timeLimit = '';
     }
     element.memo = '';
+    element.email = '';
+    element.memberName = '';
     const foundMember = this.members.find(m => m.guid === element.assignedTo);
-    if (foundMember.email.length > 0){
-      element.email = foundMember.email;
-    }
-    else {
-      element.email = this.members.find(m => m.guid === foundMember.primaryGuardian).email;
+
+    if (foundMember) {
+      element.memberName = foundMember.firstName + ' ' + foundMember.lastName;
+
+      if (foundMember.email.length > 0) {
+        element.email = foundMember.email;
+      } else {
+        element.email = this.members.find(m => m.guid === foundMember.primaryGuardian).email;
+      }
     }
   }
 
@@ -529,8 +444,12 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     obj.action = action;
     obj.from = from;
     obj.fieldName = fieldName;
+    let width = '280px';
+    if (from === 'from-agenda'){
+      width = '350px';
+    }
     const dialogRef = this.dialog.open(DialogBoxComponent, {
-      width: '280px',
+      width: width,
       data: obj
     });
 
@@ -581,6 +500,36 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     }
     if (this.historySubscription) {
       this.historySubscription.unsubscribe();
+    }
+  }
+
+  agendaGenerate(){
+    const htmlAgenda = Util.agendaGenerator(this.current, this.nextMeet, this.nextNextMeet);
+    this.openDialog('Ok','from-agenda',htmlAgenda,{});
+  }
+
+  sendEmailForCurrent(){
+    this.sendEmail(this.current);
+  }
+
+  sendEmailForNext(){
+    this.sendEmail(this.nextMeet);
+  }
+
+  sendEmailForNextNext(){
+    this.sendEmail(this.nextNextMeet);
+  }
+
+  sendEmail(meetingArray){
+    if (meetingArray.length>0){
+      meetingArray.forEach(function(c,index) {
+        setTimeout(function() {
+          if (c.roleName.indexOf('Speaker') >= 0)
+            Util.sendEmail(c.roleName, c.memberName, c.email, c.date, true);
+          else
+            Util.sendEmail(c.roleName, c.memberName, c.email, c.date, false);
+        }, 5000 * (index + 1));
+      });
     }
   }
 
