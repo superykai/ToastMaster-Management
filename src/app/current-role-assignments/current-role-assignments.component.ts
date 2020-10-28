@@ -396,6 +396,8 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
     });
     this.db.database.ref(nameOfServerTable).remove();
     whichMeeting.forEach(wm => {
+      if (wm.key)
+        delete wm.key;
       const ref = this.db.database.ref(nameOfServerTable).push();
       ref.set({...{key: ref.key}, ...wm});
     });
@@ -418,7 +420,7 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
   }
 
   rebuildElementArray(element){
-    if (element.roleName.toLowerCase().indexOf('speaker') >= 0) {
+    if (element.roleName && element.roleName.toLowerCase().indexOf('speaker') >= 0) {
       element.timeLimit = '5 - 7 Mins';
     }
     else {
