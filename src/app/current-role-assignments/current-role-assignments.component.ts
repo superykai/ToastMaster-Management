@@ -384,12 +384,22 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
 
         for (const oneRoleMem of oneRoleMemberList){
           const resultData = {...{date: meetingDate}, ...oneRoleMem};
-          if (!whichMeeting.find(c => c.assignedTo === oneRoleMem.assignedTo)
-            && !nextMeeting.find(n => n.assignedTo === oneRoleMem.assignedTo)
-            && !nextNextMeeting.find(nn => nn.assignedTo === oneRoleMem.assignedTo)) {
-            whichMeeting.push(resultData);
-            // console.log(resultData);
-            break;
+          if (isForSpeakerRolesOnly || isEvaluatorRoleOnly) {
+            if (!whichMeeting.find(c => c.assignedTo === oneRoleMem.assignedTo)
+              && !nextMeeting.find(n => n.assignedTo === oneRoleMem.assignedTo)
+              && !nextNextMeeting.find(nn => nn.assignedTo === oneRoleMem.assignedTo)) {
+              whichMeeting.push(resultData);
+              // console.log(resultData);
+              break;
+            }
+          }
+          else{
+            // is not speaker role or evaluator role
+            if (!whichMeeting.find(c => c.assignedTo === oneRoleMem.assignedTo)){
+              whichMeeting.push(resultData);
+              // console.log(resultData);
+              break;
+            }
           }
         }
       }
