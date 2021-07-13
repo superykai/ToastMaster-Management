@@ -90,17 +90,17 @@ export default class Util {
             || m.roleName.toLowerCase().indexOf('speaker 1') >= 0
             || m.roleName.toLowerCase().indexOf('evaluator 1') >= 0
             || m.roleName.toLowerCase().indexOf('general evaluator') >= 0) {
-            htmlAgenda += '<tr><td><br/></td></tr>'
+            htmlAgenda += '<tr><td><br/></td></tr>';
           }
-          htmlAgenda += '<tr><td>' + m.roleName + ': ' + m.memberName + '</td></tr>'
+          htmlAgenda += '<tr><td>' + m.roleName + ': ' + m.memberName + '</td></tr>';
         }
       });
       htmlAgenda += '</table><br/>';
-      htmlAgenda += '<table border="0"><tr><td>Join Zoom Meeting</td></tr>'+
-        '<tr><td><a href="https://zoom.us/j/615410090?pwd=amN5VzVIV2phSld2cTNIdUdBeW9rdz09">https://zoom.us/j/615410090?pwd=amN5VzVIV2phSld2cTNIdUdBeW9rdz09</a></td></tr>' +
+      htmlAgenda += '<table border="0"><tr><td>Join Zoom Meeting</td></tr>' +
+        '<tr><td><a href="https://us04web.zoom.us/j/7292733122?pwd=SDh3SmFwWFVpUHFRVUlISng1b3ZXQT09">https://us04web.zoom.us/j/7292733122?pwd=SDh3SmFwWFVpUHFRVUlISng1b3ZXQT09</a></td></tr>' +
         '<tr><td><br/></td></tr>' +
-        '<tr><td>Meeting ID: 615 410 090</td></tr>' +
-        '<tr><td>Password: hope2020</td></tr></table><br/>';
+        '<tr><td>Meeting ID: 729 273 3122</td></tr>' +
+        '<tr><td>Password: hope2021</td></tr></table><br/>';
     }
 
     if (tableNext.length > 0){
@@ -132,16 +132,16 @@ export default class Util {
     const userId = environment.emailJS.userId;
 
     let html = `
-        <h3>You have a ${role} role at ${date}.</h3>     
-        <p>Please <a href="https://toastmaster-management.web.app">CLICK HERE</a> to check all roles in that meeting.</p>   
-        <p>If you need instruction of how to perform your functional role, <a href="https://drive.google.com/file/d/13vtYsSCPDfJmhkhmQwtijDk6Hp7t15i0/view?usp=sharing">CLICK HERE</a> to 
+        <h3>You have a ${role} role at ${date}.</h3>
+        <p>Please <a href="https://toastmaster-management.web.app">CLICK HERE</a> to check all roles in that meeting.</p>
+        <p>If you need instruction of how to perform your functional role, <a href="https://drive.google.com/file/d/13vtYsSCPDfJmhkhmQwtijDk6Hp7t15i0/view?usp=sharing">CLICK HERE</a> to
         check functionary role scripts.</p>
         <p><img src="https://upload.wikimedia.org/wikipedia/en/0/05/Toastmasters_2011.png" width="168" height="147"/></p>`
     if (isSpeakerRole){
       html = `
         <h3>You have a ${role} role at ${date}.</h3>
         <p>Please <a href="https://toastmaster-management.web.app">CLICK HERE</a> to provide your speech time limit and speech intro, your default time limit is 5 - 7 mins.</p>
-        <p>If you need instruction of how to perform your functional role, <a href="https://drive.google.com/file/d/13vtYsSCPDfJmhkhmQwtijDk6Hp7t15i0/view?usp=sharing">CLICK HERE</a> to 
+        <p>If you need instruction of how to perform your functional role, <a href="https://drive.google.com/file/d/13vtYsSCPDfJmhkhmQwtijDk6Hp7t15i0/view?usp=sharing">CLICK HERE</a> to
         check functionary role scripts.</p>
         <p><img src="https://upload.wikimedia.org/wikipedia/en/0/05/Toastmasters_2011.png" width="168" height="147"/></p>`
     }
