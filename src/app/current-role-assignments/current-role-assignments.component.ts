@@ -517,7 +517,7 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
 
   agendaGenerate(){
     const htmlAgenda = Util.agendaGenerator(this.current, this.nextMeet, this.nextNextMeet);
-    this.openDialog('Ok','from-agenda',htmlAgenda,{});
+    this.openDialog('Ok', 'from-agenda', htmlAgenda,{});
   }
 
   sendEmailForCurrent(){
@@ -533,8 +533,8 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
   }
 
   sendEmail(meetingArray){
-    if (meetingArray.length>0){
-      meetingArray.forEach(function(c,index) {
+    if (meetingArray.length > 0){
+      meetingArray.forEach(function(c, index) {
         setTimeout(function() {
           if (c.roleName.indexOf('Speaker') >= 0)
             Util.sendEmail(c.roleName, c.memberName, c.email, c.date, true);
@@ -542,6 +542,15 @@ export class CurrentRoleAssignmentsComponent implements OnInit, AfterViewInit, O
             Util.sendEmail(c.roleName, c.memberName, c.email, c.date, false);
         }, 5000 * (index + 1));
       });
+    }
+  }
+
+  sendSingleEmail(c) {
+    if (c.roleName.indexOf('Speaker') >= 0) {
+      Util.sendEmail(c.roleName, c.memberName, c.email, c.date, true);
+    }
+    else {
+      Util.sendEmail(c.roleName, c.memberName, c.email, c.date, false);
     }
   }
 
