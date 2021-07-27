@@ -80,8 +80,8 @@ export default class Util {
     let htmlAgenda ='';
     if (tableCurrent.length>0) {
       htmlAgenda += '<table border="0"><tr><td>' + tableCurrent[0].date + '  Sunday Hope Toastmaster Meeting' + '</td></tr>' +
-        '<tr><td>' + 'Time: 7:00PM - 8:30PM' + '</td></tr>' +
-        '<tr><td>' + 'Location: Zoom Meeting' + '</td></tr>' +
+        '<tr><td>' + 'Time: 3:30PM - 5:00PM' + '</td></tr>' +
+        '<tr><td>' + 'Location: GPCCC Chinese School B205' + '</td></tr>' +
         '<tr><td>' + 'Theme:' + '</td></tr>';
 
       tableCurrent.forEach(m => {
@@ -96,11 +96,11 @@ export default class Util {
         }
       });
       htmlAgenda += '</table><br/>';
-      htmlAgenda += '<table border="0"><tr><td>Join Zoom Meeting</td></tr>' +
-        '<tr><td><a href="https://us04web.zoom.us/j/7292733122?pwd=SDh3SmFwWFVpUHFRVUlISng1b3ZXQT09">https://us04web.zoom.us/j/7292733122?pwd=SDh3SmFwWFVpUHFRVUlISng1b3ZXQT09</a></td></tr>' +
-        '<tr><td><br/></td></tr>' +
-        '<tr><td>Meeting ID: 729 273 3122</td></tr>' +
-        '<tr><td>Password: hope2021</td></tr></table><br/>';
+      // htmlAgenda += '<table border="0"><tr><td>Join Zoom Meeting</td></tr>' +
+      //   '<tr><td><a href="https://us04web.zoom.us/j/7292733122?pwd=SDh3SmFwWFVpUHFRVUlISng1b3ZXQT09">https://us04web.zoom.us/j/7292733122?pwd=SDh3SmFwWFVpUHFRVUlISng1b3ZXQT09</a></td></tr>' +
+      //   '<tr><td><br/></td></tr>' +
+      //   '<tr><td>Meeting ID: 729 273 3122</td></tr>' +
+      //   '<tr><td>Password: hope2021</td></tr></table><br/>';
     }
 
     if (tableNext.length > 0){
